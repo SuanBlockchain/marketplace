@@ -6,7 +6,7 @@ import React, {
 } from 'react';
 import Sidebar from '@marketplaces/ui-lib/src/lib/layout/Sidebar';
 import Navbar from '@marketplaces/ui-lib/src/lib/layout/Navbar';
-/* import { useWallet, useAddress, useLovelace } from '@meshsdk/react'; */
+import { useWallet, useAddress, useLovelace } from '@meshsdk/react';
 import { useRouter } from 'next/router';
 import { getCurrentUser, fetchUserAttributes } from 'aws-amplify/auth';
 import WalletContext from '@marketplaces/utils-2/src/lib/context/wallet-context';
@@ -29,30 +29,29 @@ const initialStatewalletInfo = {
   externalWallet: false,
 };
 const MainLayout = ({ children }: PropsWithChildren) => {
-/*   const { connect, connected, disconnect, name, wallet } = useWallet(); */
+  const { connect, connected, disconnect, name, wallet } = useWallet();
   const { walletData } = useContext<any>(WalletContext);
   const [allowAccess, setAllowAccess] = useState<boolean>(false);
   const [user, setUser] = useState<any>(null);
   const [walletInfo, setWalletInfo] = useState<any>(initialStatewalletInfo);
   const [balance, setBalance] = useState<any>(0);
-  const [balanceUSD, setBalanceUSD] = useState<number>(0)
+  const [balanceUSD, setBalanceUSD] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const router = useRouter();
 
   const { handleWalletData } = useContext<any>(WalletContext);
   useEffect(() => {
     if (walletData) {
-      getRates()
-      .then(rates =>{
-        console.log(rates,'rates 47')
+      getRates().then((rates) => {
+        console.log(rates, 'rates 47');
         setBalance((walletData.balance / 1000000).toFixed(4));
-        setBalanceUSD((walletData.balance / 1000000) * rates.ADArateUSD)
-      })
+        setBalanceUSD((walletData.balance / 1000000) * rates.ADArateUSD);
+      });
     }
   }, [walletData]);
   useEffect(() => {
-    if(window.sessionStorage.getItem("hasTokenAuth") === 'true'){
-      setAllowAccess(true)
+    if (window.sessionStorage.getItem('hasTokenAuth') === 'true') {
+      setAllowAccess(true);
     }
     const fetchData = async () => {
       let access = false;
@@ -79,21 +78,26 @@ const MainLayout = ({ children }: PropsWithChildren) => {
             const hasTokenAuthFunction = await checkTokenStakeAddress(
               wallet[0].address
             );
-            const userData = await fetchUserAttributes()
-            if (hasTokenAuthFunction || (userData['custom:role'] === 'marketplace_admin') && userData['custom:subrole'] === process.env.NEXT_PUBLIC_MARKETPLACE_NAME?.toLowerCase()) {
-              window.sessionStorage.setItem("hasTokenAuth", "true")
+            const userData = await fetchUserAttributes();
+            if (
+              hasTokenAuthFunction ||
+              (userData['custom:role'] === 'marketplace_admin' &&
+                userData['custom:subrole'] ===
+                  process.env.NEXT_PUBLIC_MARKETPLACE_NAME?.toLowerCase())
+            ) {
+              window.sessionStorage.setItem('hasTokenAuth', 'true');
               const address = wallet[0].address;
               setAllowAccess(true);
               setWalletInfo({
                 name: (wallet[0] as any)?.name,
                 addr: address,
               });
-              const balance : any =
+              const balance: any =
                 (parseInt(walletData.balance) / 1000000).toFixed(4) || 0;
-              getRates().then(rates =>{
+              getRates().then((rates) => {
                 setBalance(balance);
-                setBalanceUSD(balance * rates.ADArateUSD)
-              })
+                setBalanceUSD(balance * rates.ADArateUSD);
+              });
               access = true;
             } else {
               sessionStorage.removeItem('preferredWalletSuan');
@@ -106,7 +110,7 @@ const MainLayout = ({ children }: PropsWithChildren) => {
         if (!access) {
           let walletName: any = sessionStorage.getItem('preferredWalletSuan');
           if (walletName) {
-            /* connect(walletName); */
+            connect(walletName);
           } else {
             sessionStorage.removeItem('preferredWalletSuan');
             router.push('/');
@@ -120,17 +124,20 @@ const MainLayout = ({ children }: PropsWithChildren) => {
     fetchData();
   }, []);
 
-  /* useEffect(() => {
+  useEffect(() => {
     if (connected) {
-      if(window.sessionStorage.getItem("hasTokenAuth") === 'true'){
-        setAllowAccess(true)
+      console.log('entro');
+      if (window.sessionStorage.getItem('hasTokenAuth') === 'true') {
+        setAllowAccess(true);
       }
       const fetchData = async () => {
         const changeAddress = await wallet.getChangeAddress();
         const rewardAddresses = await wallet.getRewardAddresses();
+        /* const utxos = await wallet.getUtxos();
+        console.log('utxos', utxos); */
 
         const hasTokenAuthFunction = await checkTokenStakeAddress(
-          rewardAddresses[0]
+          changeAddress
         );
         console.log(hasTokenAuthFunction, 'hasTokenAuthFunction');
         const walletExists = await checkIfWalletExist(
@@ -139,7 +146,7 @@ const MainLayout = ({ children }: PropsWithChildren) => {
           true
         );
         if (hasTokenAuthFunction) {
-          window.sessionStorage.setItem("hasTokenAuth", "true")
+          window.sessionStorage.setItem('hasTokenAuth', 'true');
           setWalletInfo({
             name: name,
             addr: changeAddress,
@@ -156,11 +163,12 @@ const MainLayout = ({ children }: PropsWithChildren) => {
       };
       fetchData();
     }
-  }, [connected]); */
+  }, [connected]);
 
   const checkTokenStakeAddress = async (rewardAddresses: any) => {
-    let tokenAuthOnSessionStorage = window.sessionStorage.getItem("hasTokenAuth")
-    if(tokenAuthOnSessionStorage === "true") return true
+    let tokenAuthOnSessionStorage =
+      window.sessionStorage.getItem('hasTokenAuth');
+    if (tokenAuthOnSessionStorage === 'true') return true;
     const response = await fetch('/api/calls/backend/checkTokenStakeAddress', {
       method: 'POST',
       headers: {

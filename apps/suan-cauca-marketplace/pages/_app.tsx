@@ -17,6 +17,7 @@ import { Amplify } from 'aws-amplify';
 
 import config from '../src/aws-exports';
 import Script from 'next/script';
+import { MeshProvider } from '@meshsdk/react';
 
 Amplify.configure(config);
 
@@ -39,6 +40,7 @@ function MyApp({ Component, pageProps }: MyAppProps) {
       </Head>
       <LoginFromContextProvider>
         <NotificationContextProvider>
+        <MeshProvider>
           <WalletContextProvider>
             <ProjectInfoContextProvider>
               <div>
@@ -58,6 +60,7 @@ function MyApp({ Component, pageProps }: MyAppProps) {
               </div>
             </ProjectInfoContextProvider>
           </WalletContextProvider>
+        </MeshProvider>
         </NotificationContextProvider>
       </LoginFromContextProvider>
       </>

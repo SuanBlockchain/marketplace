@@ -1,31 +1,31 @@
 {
   "providers": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-terrasachamarket-dev-49979-authRole",
-      "UnauthRoleArn": "arn:aws:iam::036134507423:role/amplify-terrasachamarket-dev-49979-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::036134507423:role/amplify-terrasachamarket-dev-49979-authRole",
+      "AuthRoleName": "amplify-marketpcauca-dev-25607-authRole",
+      "UnauthRoleArn": "arn:aws:iam::036134507423:role/amplify-marketpcauca-dev-25607-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::036134507423:role/amplify-marketpcauca-dev-25607-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-terrasachamarket-dev-49979-deployment",
-      "UnauthRoleName": "amplify-terrasachamarket-dev-49979-unauthRole",
-      "StackName": "amplify-terrasachamarket-dev-49979",
-      "StackId": "arn:aws:cloudformation:us-east-1:036134507423:stack/amplify-terrasachamarket-dev-49979/b8acb7e0-6bbe-11ef-8524-12c50ee8c81f",
-      "AmplifyAppId": "dpthnm0kh5f8o"
+      "DeploymentBucketName": "amplify-marketpcauca-dev-25607-deployment",
+      "UnauthRoleName": "amplify-marketpcauca-dev-25607-unauthRole",
+      "StackName": "amplify-marketpcauca-dev-25607",
+      "StackId": "arn:aws:cloudformation:us-east-1:036134507423:stack/amplify-marketpcauca-dev-25607/6aef8960-7145-11ef-ab86-0e4c44067d59",
+      "AmplifyAppId": "d3g6351f8sugd6"
     }
   },
   "auth": {
-    "suanmarketfcd88547": {
+    "marketpsuane5dd0829": {
       "service": "Cognito",
       "serviceType": "imported",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
       "customAuth": false,
       "output": {
-        "UserPoolId": "us-east-1_g4wKDiX0F",
-        "UserPoolName": "kiosuanbcrjsappa6accc93_userpool_a6accc93-dev",
-        "AppClientID": "33uepkv93ro3tqo6pvpku816h9",
-        "AppClientIDWeb": "4es17qruqpihkmlfbqrr316t95",
-        "IdentityPoolId": "us-east-1:66fc6f16-820f-4f70-9e96-2c0f64cc7124",
-        "IdentityPoolName": "kiosuanbcrjsappa6accc93_identitypool_a6accc93__dev"
+        "UserPoolId": "us-east-1_4jexv6wdn",
+        "UserPoolName": "platform82accf3f_userpool_82accf3f-dev",
+        "AppClientID": "5ug6uhifnv610ocis2bcli5gt5",
+        "AppClientIDWeb": "3qu68fsupfvkve4cf3lu8takri",
+        "IdentityPoolId": "us-east-1:fab4eea0-db7f-4413-a527-0e63932e418e",
+        "IdentityPoolName": "platformauth_identitypool_e2d9b0e9__dev"
       },
       "frontendAuthConfig": {
         "socialProviders": [],
@@ -45,7 +45,7 @@
           "EMAIL"
         ]
       },
-      "lastPushTimeStamp": "2024-09-11T20:57:52.673Z"
+      "lastPushTimeStamp": "2024-09-18T20:45:22.134Z"
     }
   }
 }
