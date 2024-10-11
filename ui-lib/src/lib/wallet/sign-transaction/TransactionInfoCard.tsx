@@ -59,9 +59,9 @@ export default function TransactionInfoCard(props: TransactionInfoCardProps) {
 
   const [collapsed, setCollapsed] = useState(is_collapsed);
 
-  useEffect(() => {
-    setCollapsed(true);
-  }, [tx_id]);
+  /* useEffect(() => {
+    setCollapsed(false);
+  }, [tx_id]); */
 
   const toggleCollapse = () => {
     setCollapsed(!collapsed);

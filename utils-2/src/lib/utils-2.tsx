@@ -4,6 +4,7 @@ import getTTLDate from './generic/getTTLDate';
 import getDateFromTimeStamp from './generic/getDateFromTimeStamp';
 import getAssetsLockedValue from './generic/getAssetsLockedValue';
 import hexToText from './generic/hexToText';
+import textToHex from './generic/textToHex';
 import getTimeLive from './generic/getTimeLive';
 import assetDifference from './generic/assetDifference';
 import {
@@ -29,6 +30,7 @@ export {
   mapWalletDataDashboardInvestor,
   mapTransactionListDashboard,
   hexToText,
+  textToHex,
   getTimeLive,
   useEpayco,
   assetDifference,

@@ -29,7 +29,9 @@ export default function Projects(props: any) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   async function fetchProjects() {
-    const projects = await getAllProjects(process.env['NEXT_PUBLIC_MARKETPLACE_NAME']);
+    const projects = await getAllProjects(
+      process.env['NEXT_PUBLIC_MARKETPLACE_NAME']
+    );
     console.log('projects', projects);
     setProjectList(projects);
   }
@@ -51,6 +53,7 @@ export default function Projects(props: any) {
         setProjectListFiltered(projectsFiltered);
       }
       if (activeTab === 'Sin distribuir') {
+        console.log('este es: ', projectList);
         const projectsFiltered = projectList.filter(
           (project: any) =>
             project.tokenGenesis === false || project.tokenGenesis === null
@@ -87,27 +90,36 @@ export default function Projects(props: any) {
       }
     }
 
-    const marketplaceName = process.env.NEXT_PUBLIC_MARKETPLACE_NAME || 'Marketplace';
-    const marketplaceColors: Record<string, { bgColor: string; hoverBgColor: string;bgColorAlternativo:string;fuente:string;fuenteAlterna:string;}> = {
+    const marketplaceName =
+      process.env.NEXT_PUBLIC_MARKETPLACE_NAME || 'Marketplace';
+    const marketplaceColors: Record<
+      string,
+      {
+        bgColor: string;
+        hoverBgColor: string;
+        bgColorAlternativo: string;
+        fuente: string;
+        fuenteAlterna: string;
+      }
+    > = {
       Terrasacha: {
         bgColor: 'bg-custom-marca-boton',
         hoverBgColor: 'hover:bg-custom-marca-boton-variante',
         bgColorAlternativo: 'bg-custom-marca-boton-alterno2',
-        fuente:'font-jostBold',
-        fuenteAlterna:'font-jostRegular',
+        fuente: 'font-jostBold',
+        fuenteAlterna: 'font-jostRegular',
       },
-    
+
       // Agrega más marketplaces y colores aquí
     };
     const colors = marketplaceColors[marketplaceName] || {
-      bgColor:  'bg-custom-dark' ,
+      bgColor: 'bg-custom-dark',
       hoverBgColor: 'hover:bg-custom-dark-hover',
       bgColorAlternativo: 'bg-amber-400',
-      fuente:'font-semibold',
-      fuenteAlterna:'font-medium',
+      fuente: 'font-semibold',
+      fuenteAlterna: 'font-medium',
     };
 
-    
     return false;
   };
 
@@ -238,7 +250,6 @@ export default function Projects(props: any) {
       tokenName: tokenName,
       save_flag: true,
       project_id: `${project.id}`,
-      oracle_wallet_name: 'SuanOracle',
     };
     console.log(mintProjectTokenPayload);
 
@@ -270,7 +281,8 @@ export default function Projects(props: any) {
       project_id: project.id,
       tokenName: tokenName,
       parent_policy_id: createdMintProjectTokenContract.data.id,
-      oracle_wallet_name: 'SuanOracle',
+      oracle_wallet_name:
+        `${process.env['NEXT_PUBLIC_MARKETPLACE_NAME']}ORACLE${process.env['NEXT_PUBLIC_ENV']}`.toUpperCase(),
     };
 
     const response2 = await fetch('/api/contracts/create-contract', {
@@ -720,93 +732,101 @@ export default function Projects(props: any) {
     }
   };
   const marketplaceName =
-  process.env.NEXT_PUBLIC_MARKETPLACE_NAME || 'Marketplace';
-const marketplaceColors: Record<
-  string,
-  {
-    bgColor: string;
-    hoverBgColor: string;
-    bgColorAlternativo: string;
-    fuente: string;
-    fuenteAlterna: string;
-    fuenteVariante:string;
-  }
-> = {
-  Terrasacha: {
-    bgColor: 'bg-custom-marca-boton',
-    hoverBgColor: 'hover:bg-custom-marca-boton-variante',
-    bgColorAlternativo: 'bg-custom-marca-boton-alterno2',
-    fuente: 'font-jostBold',
-    fuenteAlterna: 'font-jostRegular',
-    fuenteVariante: 'font-jostItalic',
-  },
+    process.env.NEXT_PUBLIC_MARKETPLACE_NAME || 'Marketplace';
+  const marketplaceColors: Record<
+    string,
+    {
+      bgColor: string;
+      hoverBgColor: string;
+      bgColorAlternativo: string;
+      fuente: string;
+      fuenteAlterna: string;
+      fuenteVariante: string;
+    }
+  > = {
+    Terrasacha: {
+      bgColor: 'bg-custom-marca-boton',
+      hoverBgColor: 'hover:bg-custom-marca-boton-variante',
+      bgColorAlternativo: 'bg-custom-marca-boton-alterno2',
+      fuente: 'font-jostBold',
+      fuenteAlterna: 'font-jostRegular',
+      fuenteVariante: 'font-jostItalic',
+    },
 
-  // Agrega más marketplaces y colores aquí
-};
-const colors = marketplaceColors[marketplaceName] || {
-  bgColor: 'bg-custom-dark',
-  hoverBgColor: 'hover:bg-custom-dark-hover',
-  bgColorAlternativo: 'bg-amber-400',
-  fuente: 'font-semibold',
-  fuenteAlterna: 'font-medium',
-  fuenteVariante: 'font-normal',
-};
+    // Agrega más marketplaces y colores aquí
+  };
+  const colors = marketplaceColors[marketplaceName] || {
+    bgColor: 'bg-custom-dark',
+    hoverBgColor: 'hover:bg-custom-dark-hover',
+    bgColorAlternativo: 'bg-amber-400',
+    fuente: 'font-semibold',
+    fuenteAlterna: 'font-medium',
+    fuenteVariante: 'font-normal',
+  };
   return (
     <>
-    <div className={`${colors.fuenteAlterna} `}>
-      <Card className="h-fit mt-6">
-        <Card.Header title="Gestión de Proyectos" />
-        <Card.Body>
-          <ul className={`bg-custom-dark flex flex-wrap text-sm font-medium text-center text-gray-500 dark:text-gray-400 mb-2 rounded-lg`}>
-            <li className="me-2">
-              <button
-                onClick={() => setActiveTab('Distribuidos')}
-                className={`${colors.fuente} inline-block px-4 py-3 rounded-lg ${
-                  activeTab === 'Distribuidos'
-                    ? `${colors.bgColor} text-white`
-                    : `${colors.hoverBgColor} text-white`
-                }`}
-                aria-current="page"
-              >
-                Distribuidos
-              </button>
-            </li>
-            <li className="me-2">
-              <button
-                onClick={() => setActiveTab('Sin distribuir')}
-                className={`${colors.fuente} inline-block px-4 py-3 rounded-lg  ${
-                  activeTab === 'Sin distribuir'
-                    ? `${colors.bgColor} text-white`
-                    : `${colors.hoverBgColor} text-white`
-                }`}
-              >
-                Sin distribuir
-              </button>
-            </li>
-          </ul>
-          <div className="grid grid-cols-2 gap-2">
-            {projectListFiltered && projectListFiltered.length > 0 ? (
-              projectListFiltered.map((project: any) => (
-                <ProjectItem
-                  project={project}
-                  key={project.id}
-                  handleDistributeTokens={handleDistributeTokens}
-                  handleSendTokensToOwner={handleSendTokensToOwner}
-                  checkOwnerWallet={checkOwnerWallet}
-                />
-              ))
-            ) : (
-              <div className="flex col-span-2 items-center justify-center h-52">
-                No se han encontrado proyectos pendientes por distribuir
-              </div>
-            )}
-          </div>
-        </Card.Body>
-      </Card >
+      <div className={`${colors.fuenteAlterna} `}>
+        <Card className="h-fit mt-6">
+          <Card.Header title="Gestión de Proyectos" />
+          <Card.Body>
+            <ul
+              className={`bg-custom-dark flex flex-wrap text-sm font-medium text-center text-gray-500 dark:text-gray-400 mb-2 rounded-lg`}
+            >
+              <li className="me-2">
+                <button
+                  onClick={() => setActiveTab('Distribuidos')}
+                  className={`${
+                    colors.fuente
+                  } inline-block px-4 py-3 rounded-lg ${
+                    activeTab === 'Distribuidos'
+                      ? `${colors.bgColor} text-white`
+                      : `${colors.hoverBgColor} text-white`
+                  }`}
+                  aria-current="page"
+                >
+                  Distribuidos
+                </button>
+              </li>
+              <li className="me-2">
+                <button
+                  onClick={() => setActiveTab('Sin distribuir')}
+                  className={`${
+                    colors.fuente
+                  } inline-block px-4 py-3 rounded-lg  ${
+                    activeTab === 'Sin distribuir'
+                      ? `${colors.bgColor} text-white`
+                      : `${colors.hoverBgColor} text-white`
+                  }`}
+                >
+                  Sin distribuir
+                </button>
+              </li>
+            </ul>
+            <div className="grid grid-cols-2 gap-2">
+              {projectListFiltered && projectListFiltered.length > 0 ? (
+                projectListFiltered.map((project: any) => (
+                  <ProjectItem
+                    project={project}
+                    key={project.id}
+                    handleDistributeTokens={handleDistributeTokens}
+                    handleSendTokensToOwner={handleSendTokensToOwner}
+                    checkOwnerWallet={checkOwnerWallet}
+                  />
+                ))
+              ) : (
+                <div className="flex col-span-2 items-center justify-center h-52">
+                  No se han encontrado proyectos pendientes por distribuir
+                </div>
+              )}
+            </div>
+          </Card.Body>
+        </Card>
       </div>
-      <div className="mt-6"> {/* Este margen agrega el espacio después del Card */}
-  {/* Contenido adicional */}
-</div>
+      <div className="mt-6">
+        {' '}
+        {/* Este margen agrega el espacio después del Card */}
+        {/* Contenido adicional */}
+      </div>
       <SignTransactionModal
         signTransactionModal={signTransactionModal}
         handleOpenSignTransactionModal={handleOpenSignTransactionModal}

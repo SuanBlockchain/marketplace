@@ -80,10 +80,15 @@ const SignUpForm = (props: SignUpFormProps) => {
         query: { email: signupForm.email}
       });
     } catch (error: any) {
-      if (error.message === 'Las contraseñas no coinciden') {
+      if (signupForm.password !== extraForm.confirmPassword) {
         setErrors((preForm: any) => ({
           ...preForm,
-          confirmPasswordError: 'Las contraseñas no coinciden',
+          confirmPassword: 'Las contraseñas no coinciden', // Actualiza aquí
+        }));
+      } else if (error.name === 'UsernameExistsException') {
+        setErrors((preForm: any) => ({
+          ...preForm,
+          createUserError: 'El nombre de usuario ya existe',
         }));
       } else if (error.name === 'UsernameExistsException') {
         setErrors((preForm: any) => ({
@@ -93,7 +98,7 @@ const SignUpForm = (props: SignUpFormProps) => {
       } else if (error.name === 'InvalidPasswordException') {
         setErrors((preForm: any) => ({
           ...preForm,
-          confirmPassword: 'La contraseña debe tener al menos 8 caracteres',
+          confirmPassword: 'La contraseña debe tener al menos 8 caracteres (Ver Condiciones Requeridas)',
         }));
       } else if (error.name === 'InvalidParameterException') {
         if(error.message === 'Invalid email address format.'){
@@ -107,7 +112,7 @@ const SignUpForm = (props: SignUpFormProps) => {
           setErrors((preForm: any) => ({
             ...preForm,
             createUserError:
-              'El nombre de usuario no satisface las condiciones requeridas',
+              'El nombre de usuario no satisface las Condiciones Requeridas',
           }));
         }
       }
@@ -126,7 +131,7 @@ const SignUpForm = (props: SignUpFormProps) => {
     <div className="bg-white rounded-2xl w-[35rem] max-w-[35rem] 2xl:w-[38%] py-10 px-12 sm:px-20 h-auto flex flex-col justify-center">
       <div className="w-full flex justify-center mb-8">
         <Image
-          src={logo}
+          src="/v2/logoterrasacha.svg"
           width={widthLogo}
           height={heightLogo}
           alt={`${appName} logo`}
@@ -138,7 +143,7 @@ const SignUpForm = (props: SignUpFormProps) => {
         </a> */}
       </h2>
       <p className="font-jostItalic text-xs">
-        Consideraciones: El nombre de usuario no puede contener espacios ni
+        Condiciones Requeridas: El nombre de usuario no puede contener espacios ni
         caracteres especiales. La contraseña debe tener más de 8 caracteres y
         poseer al menos un valor numérico
       </p>

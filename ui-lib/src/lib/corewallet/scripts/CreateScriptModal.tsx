@@ -107,7 +107,7 @@ export default function CreateScriptModal(props: CreateScriptModalProps) {
       tokenName: newContract.tokenName, // Opcional
       save_flag: newContract.saveFlag, // Opcional
       project_id: newContract.projectId, // Opcional
-      oracle_wallet_name: 'SuanOracle', // Opcional
+      oracle_wallet_name: `${process.env['NEXT_PUBLIC_MARKETPLACE_NAME']}ORACLE${process.env['NEXT_PUBLIC_ENV']}`.toUpperCase(),
     };
     console.log(payload);
     const response = await fetch('/api/contracts/create-contract', {
@@ -141,7 +141,7 @@ export default function CreateScriptModal(props: CreateScriptModalProps) {
         project_id: newContract.projectId, // Opcional
         tokenName: newContract.tokenName, // Opcional
         parent_policy_id: responseData.data.id,
-        oracle_wallet_name: 'SuanOracle', // Opcional
+        oracle_wallet_name: `${process.env['NEXT_PUBLIC_MARKETPLACE_NAME']}ORACLE${process.env['NEXT_PUBLIC_ENV']}`.toUpperCase(),
       };
 
       const response2 = await fetch('/api/contracts/create-contract', {

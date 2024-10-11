@@ -162,13 +162,13 @@ const PasteWordsStep = (props: any) => {
       </div>
       <div className="flex w-full justify-end mt-6">
       <Button
-   className="group flex h-min items-center justify-center p-1 text-center font-medium focus:z-10 focus:outline-none text-white bg-custom-marca-boton-alterno  enabled:hover:bg-custom-marca-boton-alterno2 border border-transparent  dark:bg-cyan-600 dark:enabled:hover:bg-cyan-700  rounded-lg focus:ring-2 px-8 ml-4"
+   className="font-jostBold  group flex items-center h-10 justify-center p-1 text-center font-medium focus:z-10 focus:outline-none text-white bg-custom-marca-boton  enabled:hover:bg-custom-marca-boton-variante border border-transparent rounded-lg focus:ring-2 px-8 ml-4"
   onClick={() => setCurrentSection(1)}
 >
   Volver
 </Button>
 <button
-  className="font-jostBold group flex items-center justify-center h-12 px-8 text-center font-medium focus:z-10 focus:outline-none text-white bg-custom-marca-boton hover:bg-custom-marca-boton-variante border border-transparent  dark:bg-cyan-600 dark:hover:bg-cyan-700  rounded-lg focus:ring-2 ml-4"
+  className="font-jostBold group flex items-center h-10 justify-center  px-8 text-center font-medium focus:z-10 focus:outline-none text-white bg-custom-marca-boton hover:bg-custom-marca-boton-variante border border-transparent  dark:bg-cyan-600 dark:hover:bg-cyan-700  rounded-lg focus:ring-2 ml-4"
   onClick={() => setCurrentSection(3)}
 >
   Continuar

@@ -45,7 +45,7 @@ const WelcomeCard = (props: WelcomeCardProps) => {
       {appName === 'Terrasacha' && (
         <div className='flex justify-center'>
         <Image
-          src="/v2/logo.svg"
+          src="/v2/logoterrasacha.svg"
           width={400}
           height={80}
           alt="Logotipo de Terrasacha"
@@ -105,14 +105,14 @@ const WelcomeCard = (props: WelcomeCardProps) => {
       }
       {userData && (
         <Link href="/restore-wallet">
-      <button className="font-jostBold relative w-full flex items-center justify-center font-jostBold focus:z-10 focus:outline-none text-white bg-custom-marca-boton border border-transparent enabled:hover:bg-custom-marca-boton-variante  dark:bg-cyan-600 dark:enabled:hover:bg-cyan-700  rounded-lg focus:ring-2 px-8 py-2 mt-4">
+      <button className="font-jostBold relative w-full flex items-center justify-center font-jostBold focus:z-10 focus:outline-none text-white bg-custom-marca-boton  border-transparent enabled:hover:bg-custom-marca-boton-variante  dark:bg-cyan-600 dark:enabled:hover:bg-cyan-700  rounded-lg focus:ring-2 px-8 py-2 mt-4">
 
             Recuperar billetera
           </button>
         </Link>
       )}
       {userData && (
-        <button className="font-jostBold relative w-full flex items-center justify-center font-jostBold focus:z-10 focus:outline-none text-custom-marca-boton-variante2 bg-transparent enabled:hover:bg-custom-marca-boton-alterno2  dark:bg-cyan-600 dark:enabled:hover:bg-cyan-700  rounded-lg focus:ring-2 px-8 py-2 mt-4"
+        <button className="font-jostBold relative w-full flex items-center justify-center font-jostBold focus:z-10 focus:outline-none text-white bg-custom-marca-boton  border-transparent enabled:hover:bg-custom-marca-boton-variante  dark:bg-cyan-600 dark:enabled:hover:bg-cyan-700  rounded-lg focus:ring-2 px-8 py-2 mt-4"
 
           onClick={() => {
             signOut().then(() => router.reload());

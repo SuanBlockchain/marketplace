@@ -8,6 +8,7 @@ import { TailSpin } from 'react-loader-spinner';
 import { encryptPassword, updateWallet } from '@marketplaces/data-access';
 import { fetchUserAttributes } from 'aws-amplify/auth';
 import Image from 'next/image'; // Importa Image de Next.js
+
 const deafultState = { walletname: '', password: '', passwordConfirm: '' };
 const deafultStateShowInfo = { password: false, passwordConfirm: false };
 const CreateCredentials = (props: any) => {
@@ -17,17 +18,19 @@ const CreateCredentials = (props: any) => {
   const [showInfo, setShowInfo] = useState(deafultStateShowInfo) as any[];
   const [errors, setErrors] = useState(deafultState) as any[];
   const [loading, setLoading] = useState(false) as any[];
-  const [userIsAdmin, serUserIsAdmin] = useState(false)
+  const [userIsAdmin, serUserIsAdmin] = useState(false);
 
-  useEffect(() =>{
-    fetchUserAttributes().then((data) =>{
-      if(data['custom:role'] === 'marketplace_admin' && data){
-        serUserIsAdmin(true)
-      }
-    }).catch((error) =>{
-      console.log('error obteniendo data del usuario', error)
-    })
-  },[])
+  useEffect(() => {
+    fetchUserAttributes()
+      .then((data) => {
+        if (data['custom:role'] === 'marketplace_admin' && data) {
+          serUserIsAdmin(true);
+        }
+      })
+      .catch((error) => {
+        console.log('error obteniendo data del usuario', error);
+      });
+  }, []);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setErrors(deafultState);
     setInputValue({
@@ -79,9 +82,10 @@ const CreateCredentials = (props: any) => {
   };
   const createWallet = async () => {
     const info = {
-      save_flag: true,
+      mnemonic_words: words,
+      wallet_type: 'user',
       userID: user,
-      words: words,
+      save_flag: true,
     };
     try {
       setLoading(true);
@@ -99,10 +103,10 @@ const CreateCredentials = (props: any) => {
       const response2 = await fetch('api/calls/backend/updateWallet', {
         method: 'POST',
         body: JSON.stringify({
-          id: data.data.wallet_id,
+          id: data.wallet_id,
           name: inputValue.walletname,
           passphrase: inputValue.password,
-          isAdmin: userIsAdmin
+          isAdmin: userIsAdmin,
         }),
       });
       setCurrentSection(4);
@@ -115,16 +119,17 @@ const CreateCredentials = (props: any) => {
 
   return (
     <div>
-            <section className="flex flex-col items-center pb-2">
+      <section className="flex flex-col items-center pb-2">
         <Image
           src="/v2/logo.svg"
           alt="Logo"
           width={500} // Ajusta el tamaño según sea necesario
           height={500} // Ajusta el tamaño según sea necesario
           className="mb-4" // Margen inferior para separar la imagen del texto
-        /> </section>
+        />{' '}
+      </section>
       <section className="flex justify-between pb-2">
-        <h2 className="text-3xl font-jostBlod text-center w-full">
+        <h2 className="text-3xl font-jostBold text-center w-full">
           Crea tu billetera de Cardano
         </h2>
       </section>
@@ -214,20 +219,18 @@ const CreateCredentials = (props: any) => {
         </div>
       </div>
       <div className="flex w-full justify-end mt-6 ">
+        <button
+          className="font-jostBold relative group flex items-center h-10 justify-center p-1 text-center font-medium focus:z-10 focus:outline-none text-white bg-custom-marca-boton  enabled:hover:bg-custom-marca-boton-variante border border-transparent rounded-lg focus:ring-2 px-8 ml-4"
+          onClick={() => setInputValue(deafultState)}
+        >
+          Limpiar campos
+        </button>
 
-
-<button
-  className="group flex items-center justify-center h-12 px-4 text-center font-medium focus:z-10 focus:outline-none text-white bg-custom-marca-boton-variante2 hover:bg-custom-marca-boton-alterno border border-transparent rounded-lg focus:ring-2 ml-4"
-  onClick={() => setInputValue(deafultState)}
->
-  Limpiar campos
-</button>
-
-<button
-  className="relative group flex items-center justify-center h-12 min-w-16 px-4 text-center font-medium focus:z-10 focus:outline-none text-white bg-custom-marca-boton-variante hover:bg-custom-marca-boton-variante2 border border-transparent   rounded-lg focus:ring-2 ml-4"
-  onClick={() => handleContinue()}
->
-{loading ? (
+        <button
+          className="font-jostBold relative group flex items-center h-10 justify-center p-1 text-center font-medium focus:z-10 focus:outline-none text-white bg-custom-marca-boton  enabled:hover:bg-custom-marca-boton-variante border border-transparent rounded-lg focus:ring-2 px-8 ml-4"
+          onClick={() => handleContinue()}
+        >
+          {loading ? (
             <TailSpin
               width="20"
               color="#fff"
@@ -236,7 +239,7 @@ const CreateCredentials = (props: any) => {
           ) : (
             'Continuar'
           )}{' '}
-</button>
+        </button>
       </div>
     </div>
   );

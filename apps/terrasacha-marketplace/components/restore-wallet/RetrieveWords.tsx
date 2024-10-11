@@ -19,13 +19,13 @@ const PasteWordsStep = (props: any) => {
     nextRecoveryWordIndex,
     setNextRecoveryWordIndex,
   } = useContext<any>(RestoreWalletContext);
-  const router = useRouter()
+  const router = useRouter();
   const setCurrentSection = props.setCurrentSection;
   const [inputValue, setInputValue] = useState('') as any[];
   const [dictionary, setDictionary] = useState([]) as any[];
   const [errorInput, setErrorInput] = useState(false) as any[];
   useEffect(() => {
-    setRecoveryWords(Array(24).fill(''))
+    setRecoveryWords(Array(24).fill(''));
     fetchDictionary();
   }, []);
 
@@ -38,7 +38,7 @@ const PasteWordsStep = (props: any) => {
   };
 
   const updateRecoveryWords = (index: number, value: string, from: string) => {
-    console.log(value)
+    console.log(value);
     const saveWord = compareAndSaveWord(from, value);
     if (saveWord) {
       const updateRecoveryWords = [...recoveryWords];
@@ -54,17 +54,17 @@ const PasteWordsStep = (props: any) => {
       recoveryWordsCopy[index] = word;
     });
 
-      setRecoveryWords(recoveryWordsCopy);
-      setNextRecoveryWordIndex(copywords.length);
-      setInputValue('');
-
+    setRecoveryWords(recoveryWordsCopy);
+    setNextRecoveryWordIndex(copywords.length);
+    setInputValue('');
   };
 
   const handleKeyDown = (e: any, index: number, value: string) => {
     if (e.key === 'Enter') {
       if (value.includes(' ')) {
         const copywords = value.split(' ');
-        if(checkcopyWords(copywords)) return updateRecoveryWordsCopy(copywords);
+        if (checkcopyWords(copywords))
+          return updateRecoveryWordsCopy(copywords);
       }
       updateRecoveryWords(index, value, 'input');
     }
@@ -79,7 +79,7 @@ const PasteWordsStep = (props: any) => {
         word.includes(inputValue)
       );
       if (currentWord.includes(inputValue) && wordInDictionary.length === 1) {
-        console.log(wordInDictionary[0])
+        console.log(wordInDictionary[0]);
         return wordInDictionary[0];
       } else {
         setErrorInput(true);
@@ -87,28 +87,26 @@ const PasteWordsStep = (props: any) => {
       }
     }
     if (from === 'button') {
-      console.log(value)
-        return value
+      console.log(value);
+      return value;
     }
   };
-  const checkcopyWords = (copywords: Array<string>) =>{
-    const lengthCopyWords = copywords.length
-    let copywordsOnDicc = 0
-    copywords.forEach(item=>{
-      if(dictionary.some((word : string) => word === item)){
-        copywordsOnDicc += 1
+  const checkcopyWords = (copywords: Array<string>) => {
+    const lengthCopyWords = copywords.length;
+    let copywordsOnDicc = 0;
+    copywords.forEach((item) => {
+      if (dictionary.some((word: string) => word === item)) {
+        copywordsOnDicc += 1;
       }
-    })
+    });
 
-    if(copywordsOnDicc === lengthCopyWords) return true
-    return false
-
-
-  }
-  const changeWordsLength = (option:any) =>{
-    setRecoveryWords(Array(option).fill(''))
-    setNextRecoveryWordIndex(0)
-  }
+    if (copywordsOnDicc === lengthCopyWords) return true;
+    return false;
+  };
+  const changeWordsLength = (option: any) => {
+    setRecoveryWords(Array(option).fill(''));
+    setNextRecoveryWordIndex(0);
+  };
   return (
     <div>
       <section className="flex flex-col items-center pb-2">
@@ -118,18 +116,26 @@ const PasteWordsStep = (props: any) => {
           width={500} // Ajusta el tamaño según sea necesario
           height={500} // Ajusta el tamaño según sea necesario
           className="mb-4" // Margen inferior para separar la imagen del texto
-        /> </section>
-       <section className="flex flex-col items-center pb-2">
-      <div className='flex justify-center'>
-        <h2 className="w-full text-2xl font-semibold pb-2 font-jostBold">
-          Palabras de Recuperación
-        </h2>
-      </div>
+        />{' '}
       </section>
-      <h4 className='w-full text-md font-jostRegular'>¿Qué tipo de billetera le gustaría restaurar?</h4>
-  
-      <p className='w-5/6 text-sm py-2 font-jostItalic'>Nota: De las billeteras existentes Daedalus, Yoroi y Eternl utilizan frases de recuperación de 15 o 24 palabras. También son comunes las de 12 palabras. 
-Los monederos de la era Byron no están soportados actualmente. Si necesita recuperar un monedero anterior a agosto de 2020, utilice Yoroi.</p>
+      <section className="flex flex-col items-center pb-2">
+        <div className="flex justify-center">
+          <h2 className="w-full text-2xl font-semibold pb-2 font-jostBold">
+            Palabras de Recuperación
+          </h2>
+        </div>
+      </section>
+      <h4 className="w-full text-md font-jostRegular">
+        ¿Qué tipo de billetera le gustaría restaurar?
+      </h4>
+
+      <p className="w-5/6 text-sm py-2 font-jostItalic">
+        Nota: De las billeteras existentes Daedalus, Yoroi y Eternl utilizan
+        frases de recuperación de 15 o 24 palabras. También son comunes las de
+        12 palabras. Los monederos de la era Byron no están soportados
+        actualmente. Si necesita recuperar un monedero anterior a agosto de
+        2020, utilice Yoroi.
+      </p>
 
       <fieldset className="flex gap-2 mb-2 bg-cu">
         {options.map((option, index) => {
@@ -185,21 +191,24 @@ Los monederos de la era Byron no están soportados actualmente. Si necesita recu
             })}
       </div>
       <div className="flex w-full justify-end mt-6  ">
-      <Button
-  className="group flex items-center justify-center h-12 px-8 text-center font-medium focus:z-10 focus:outline-none text-white bg-custom-marca-boton-alterno hover:bg-custom-marca-boton-alterno2 border border-transparent  dark:bg-cyan-600 dark:hover:bg-cyan-700  rounded-lg focus:ring-2 ml-4"
-  onClick={() => { setCurrentSection(1); router.push('/') }}
-  color="gray"
->
-  Volver
-</Button>
+        <Button
+          className="font-jostBold relative group flex items-center h-10 justify-center p-1 text-center font-medium focus:z-10 focus:outline-none text-white bg-custom-marca-boton  enabled:hover:bg-custom-marca-boton-variante border border-transparent rounded-lg focus:ring-2 px-8 ml-4"
+          onClick={() => {
+            setCurrentSection(1);
+            router.push('/');
+          }}
+          color="gray"
+        >
+          Volver
+        </Button>
 
-<button
-  className="group flex items-center justify-center h-12 px-8 text-center font-medium focus:z-10 focus:outline-none text-white bg-custom-marca-boton hover:bg-custom-marca-boton-variante border border-transparent  dark:bg-cyan-600 dark:hover:bg-cyan-700  rounded-lg focus:ring-2 ml-4"
-  disabled={recoveryWords.includes("")}
-  onClick={() => setCurrentSection(2)}
->
-  Continuar
-</button>
+        <button
+          className="font-jostBold group flex items-center justify-center h-10 px-8 text-center font-medium focus:z-10 focus:outline-none text-white bg-custom-marca-boton hover:bg-custom-marca-boton-variante border border-transparent  dark:bg-cyan-600 dark:hover:bg-cyan-700  rounded-lg focus:ring-2 ml-4"
+          disabled={recoveryWords.includes('')}
+          onClick={() => setCurrentSection(2)}
+        >
+          Continuar
+        </button>
       </div>
     </div>
   );

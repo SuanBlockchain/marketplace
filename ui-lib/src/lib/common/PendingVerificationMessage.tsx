@@ -1,125 +1,181 @@
 import { useEffect, useState } from 'react';
 import { getCurrentUser } from 'aws-amplify/auth';
 import { CheckIcon } from '../icons/CheckIcon';
+import axios from 'axios';
 
 export default function PendingVerificationMessage() {
   const [verificationStatus, setVerificationStatus] = useState<any>(null);
   const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [status, setStatus] = useState<'success' | 'error' | null>(null);
+
+  // Cargar el SDK de Persona al montar el componente
+  useEffect(() => {
+    const loadPersonaScript = () => {
+      console.log('Intentando cargar el SDK de Persona...');
+      const script = document.createElement('script');
+      script.src = 'https://cdn.withpersona.com/dist/persona-v5.0.0.js';
+      script.integrity = 'sha384-0LXHuG9ceBdEVRdF698trmE0xe0n9LgW8kNTJ9t/mH3U8VXJy0jNGMw/jPz9W82M';
+      script.crossOrigin = 'anonymous';
+      script.async = true;
+      script.onload = () => {
+        console.log('Persona SDK cargado correctamente');
+      };
+      script.onerror = (error) => {
+        console.error('Error al cargar el SDK de Persona:', error);
+      };
+      document.body.appendChild(script);
+    };
+
+    loadPersonaScript();
+
+    return () => {
+      const personaScript = document.querySelector("script[src='https://cdn.withpersona.com/dist/persona-v5.0.0.js']");
+      if (personaScript) {
+        document.body.removeChild(personaScript);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
-      let userId = null;
       try {
-        const { userId } = await getCurrentUser();
+        const currentUser = await getCurrentUser();
+        const userId = currentUser.userId;
+  
+        if (!userId) {
+          console.error('El id del usuario es indefinido');
+          return;
+        }
+  
         setUser(userId);
-
+  
         const response = await fetch(
           `/api/validations/validUser?userId=${userId}`
         );
         let userValidation = await response.json();
         console.log('uservalid', userValidation);
-
-        // Si tiene cuenta ya cumplio la verificacion basica
+  
+        // Si tiene cuenta ya cumplió la verificación básica
         if (userId) {
           userValidation.isValidatedStep1 = true;
         }
-
+  
         if (userValidation) {
           setVerificationStatus(userValidation);
         }
-      } catch {
+      } catch (error) {
+        console.error('Error fetching user data:', error);
         setVerificationStatus({
           isValidatedStep1: false,
           isValidatedStep2: false,
         });
       }
     };
-
+  
     fetchData();
   }, []);
 
+ const handleStartVerification = () => {
+  console.log('Intentando iniciar el flujo de verificación...');
+  setLoading(true);
+  setStatus(null);
+
+  if ((window as any).Persona) {
+    console.log('Persona SDK disponible, iniciando flujo...');
+    const client = new (window as any).Persona.Client({
+      templateId: 'itmpl_vky7ZY8yh6LmeJzApg1smgumm5Pw', // GovID + Selfie
+      environment: 'sandbox', // Cambia a 'production' cuando estés listo
+      onReady: () => {
+        client.open();
+      },
+      onComplete: async ({ inquiryId, status }: { inquiryId: string; status: string }) => {
+        console.log(`Verificación completada: Inquiry ID = ${inquiryId}, Status = ${status}`);
+        setLoading(false);
+        setStatus(status === 'completed' ? 'success' : 'error');
+
+        if (status === 'completed') {
+          localStorage.setItem('isVerified', 'true'); // Guardar estado de verificación
+          if (user) {
+            console.log('Actualizando estado a isValidatedStep2: true');
+            await updateVerificationStatus(true, user); // Actualiza isValidatedStep2 a true
+            setVerificationStatus((prevState: any) => ({
+              ...prevState,
+              isValidatedStep2: true,
+            })); // Actualizar el estado local
+          } else {
+            console.error('El id del usuario es indefinido');
+          }
+        } else {
+          localStorage.setItem('isVerified', 'false'); // Guardar estado de verificación fallida
+          if (user) {
+            console.log('Actualizando estado a isValidatedStep2: false');
+            await updateVerificationStatus(false, user); // Actualiza isValidatedStep2 a false
+            setVerificationStatus((prevState: any) => ({
+              ...prevState,
+              isValidatedStep2: false,
+            })); // Actualizar el estado local
+          } else {
+            console.error('El id del usuario es indefinido');
+          }
+        }
+      },
+
+      onError: (error: any) => {
+        console.error('Error en la verificación de Persona:', error);
+        setLoading(false);
+        setStatus('error');
+      }
+    });
+  } else {
+    console.error('Persona SDK no está disponible en el objeto window.');
+    setLoading(false);
+    setStatus('error');
+  }
+};
+
+  
+  const updateVerificationStatus = async (isValidatedStep2: boolean, userId: string) => {
+    try {
+      const mutation = `
+        mutation MyMutation {
+          updateUser(input: { id: "${userId}", isValidatedStep2: ${isValidatedStep2} }) {
+            id
+            isValidatedStep2
+          }
+        }
+      `;
+      console.log('Enviando mutación GraphQL:', mutation); // Log para ver la mutación que se envía
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_graphqlEndpoint}`, { query: mutation }, {
+        headers: { 'x-api-key': process.env.NEXT_PUBLIC_API_KEY_PLATAFORMA }
+      });
+  
+      console.log('Respuesta de la actualización:', response.data); // Log para ver la respuesta del servidor
+      console.log('Estado de verificación Pro actualizado');
+    } catch (error) {
+      console.error('Error actualizando el estado de verificación Pro:', error);
+    }
+  };
+  
+  
+
+ 
+  
   const renderVerificationLevels = () => {
     return (
       <div className="space-y-4">
         <div className="pl-4">
           <ol className="relative text-gray-500 border-s border-gray-200 dark:border-gray-700 dark:text-gray-400 pl-2">
-            <li className="mb-10 ms-6">
-              <span
-                className={`absolute flex items-center justify-center w-8 h-8 ${
-                  verificationStatus.isValidatedStep1
-                    ? 'bg-green-200'
-                    : 'bg-gray-100'
-                }  rounded-full -start-4 ring-4 ring-white`}
-              >
-                {verificationStatus.isValidatedStep1 ? (
-                  <svg
-                    className="w-3.5 h-3.5 text-green-500 dark:text-green-400"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 16 12"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M1 5.917 5.724 10.5 15 1.5"
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 18 20"
-                  >
-                    <path d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z" />
-                  </svg>
-                )}
-              </span>
-              <h3 className="font-medium leading-tight">Verificación Basica</h3>
-              <p className="text-sm">Correo electronico</p>
-              {!verificationStatus.isValidatedStep1 && (
-                <button
-                  type="button"
-                  className="text-white bg-green-800 hover:bg-green-900 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 me-2 mt-2 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-                  onClick={() =>
-                    window.open(
-                      `https://identity.truora.com/preview/IPFe5575f69c6c12802870e66a8e5f6a94c?trigger_user=neider.smith1%40gmail.com&account_id=${user}`
-                    )
-                  }
-                >
-                  <CheckIcon className="h-3 w-3 me-2" />
-                  Verificación Básica
-                </button>
-              )}
-            </li>
             <li className="ms-6">
               <span
                 className={`absolute flex items-center justify-center w-8 h-8 ${
-                  verificationStatus.isValidatedStep2
+                  verificationStatus?.isValidatedStep2
                     ? 'bg-green-200'
                     : 'bg-gray-100'
                 }  rounded-full -start-4 ring-4 ring-white`}
               >
-                {verificationStatus.isValidatedStep2 ? (
-                  <svg
-                    className="w-3.5 h-3.5 text-green-500 dark:text-green-400"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 16 12"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M1 5.917 5.724 10.5 15 1.5"
-                    />
-                  </svg>
+                {verificationStatus?.isValidatedStep2 ? (
+                  <CheckIcon className="w-3.5 h-3.5 text-green-500 dark:text-green-400" />
                 ) : (
                   <svg
                     className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400"
@@ -133,20 +189,14 @@ export default function PendingVerificationMessage() {
                 )}
               </span>
               <h3 className="font-medium leading-tight">Verificación Pro</h3>
-              <p className="text-sm">Ubicación</p>
-              <p className="text-sm">Teléfono</p>
               <p className="text-sm">Validación de documento</p>
               <p className="text-sm">Reconocimiento facial</p>
-              {!verificationStatus.isValidatedStep2 && (
+              {!verificationStatus?.isValidatedStep2 && (
                 <button
                   type="button"
                   className={`text-white disabled:opacity-50 bg-green-800 hover:bg-green-900 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 me-2 mt-2 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800`}
-                  disabled={!verificationStatus.isValidatedStep1 && true}
-                  onClick={() =>
-                    window.open(
-                      `https://identity.truora.com/preview/IPF428f73bc6dc1448d38eedac992d43f17?trigger_user=neider.smith1%40gmail.com&account_id=${user}`
-                    )
-                  }
+                  disabled={!verificationStatus?.isValidatedStep1}
+                  onClick={handleStartVerification} // Ejecutar verificación Pro
                 >
                   <CheckIcon className="h-3 w-3 me-2" />
                   Verificación Pro
@@ -161,8 +211,8 @@ export default function PendingVerificationMessage() {
 
   const renderVerificationDetails = () => {
     if (
-      !verificationStatus.isValidatedStep1 ||
-      !verificationStatus.isValidatedStep2
+      !verificationStatus?.isValidatedStep1 ||
+      !verificationStatus?.isValidatedStep2
     ) {
       return (
         <div className="space-y-4">

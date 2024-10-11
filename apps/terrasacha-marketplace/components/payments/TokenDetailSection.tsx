@@ -9,7 +9,8 @@ export function TokenDetailSection({
   tokenCurrency,
   creationDate,
   availableAmount,
-  tokenPrice,
+  tokenPriceCOP,
+  tokenPriceADA,
   tokenImageUrl,
 }: {
   projectName: string;
@@ -17,7 +18,8 @@ export function TokenDetailSection({
   tokenCurrency: string;
   creationDate: string;
   availableAmount: number | null;
-  tokenPrice: string;
+  tokenPriceCOP: string;
+  tokenPriceADA: string;
   tokenImageUrl: string;
 }) {
   return (
@@ -27,7 +29,7 @@ export function TokenDetailSection({
           <img
             src={tokenImageUrl}
             alt="Imagen desde IPFS"
-            className="animate-pulse"
+            className=""
             width={200}
             height={200}
           ></img>
@@ -41,6 +43,10 @@ export function TokenDetailSection({
               <span className="text-end">{tokenName}</span>
             </div>
             <div className="flex justify-between">
+              <span>Fecha de creación</span>
+              <span className="text-end">{creationDate}</span>
+            </div>
+            <div className="flex justify-between">
               <span>Cantidad disponible</span>
               <span className="text-end">
                 {parseFloat(String(availableAmount)).toLocaleString('es-CO')}{' '}
@@ -50,13 +56,15 @@ export function TokenDetailSection({
             <div className="flex justify-between">
               <span>Precio unitario</span>
               <span className="font-bold text-end">
-                {parseFloat(tokenPrice).toLocaleString('es-CO')} {tokenCurrency}{' '}
+                {parseFloat(tokenPriceCOP).toLocaleString('es-CO')} {tokenCurrency}{' '}
                 / tCO2eq
               </span>
             </div>
-            <div className="flex justify-between">
-              <span>Fecha de creación</span>
-              <span className="text-end">{creationDate}</span>
+            <div className="flex justify-end">
+              <span className="font-bold text-end">
+                {(parseFloat(tokenPriceADA)/ 1000000).toFixed(4)} ADA{' '}
+                / tCO2eq
+              </span>
             </div>
           </div>
         </div>

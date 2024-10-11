@@ -79,9 +79,10 @@ const CreateCredentials = (props: any) => {
   };
   const createWallet = async () => {
     const info = {
-      save_flag: true,
+      mnemonic_words: words,
+      wallet_type: 'user',
       userID: user,
-      words: words,
+      save_flag: true,
     };
     try {
       setLoading(true);
@@ -99,7 +100,7 @@ const CreateCredentials = (props: any) => {
       const response2 = await fetch('api/calls/backend/updateWallet', {
         method: 'POST',
         body: JSON.stringify({
-          id: data.data.wallet_id,
+          id: data.wallet_id,
           name: inputValue.walletname,
           passphrase: inputValue.password,
           isAdmin: userIsAdmin
@@ -214,7 +215,7 @@ const CreateCredentials = (props: any) => {
           Limpiar todos los campos
         </Button>
         <button
-          className="relative flex h-10 min-w-14 items-center justify-center p-2 font-medium focus:z-10 focus:outline-none text-white bg-cyan-700 border border-transparent enabled:hover:bg-cyan-800  dark:bg-cyan-600 dark:enabled:hover:bg-cyan-700  rounded-lg focus:ring-2 px-8 ml-4"
+          className="relative flex h-10 items-center justify-center p-2 font-medium focus:z-10 focus:outline-none text-white bg-cyan-700 border border-transparent enabled:hover:bg-cyan-800  dark:bg-cyan-600 dark:enabled:hover:bg-cyan-700  rounded-lg focus:ring-2 px-8 ml-4"
           onClick={() => handleContinue()}
         >
           {loading ? (

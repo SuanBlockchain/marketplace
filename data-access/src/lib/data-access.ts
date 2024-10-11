@@ -252,6 +252,7 @@ export async function getAllProjects(app: string | undefined) {
                 id
                 name
               }
+              marketplaceID
               description
               categoryID 
               category {
@@ -364,6 +365,7 @@ export async function getAllProjects(app: string | undefined) {
     console.log(awsAppSyncApiKey, 'awsAppSyncApiKey');
     console.log(graphqlEndpoint, 'graphqlEndpoint');
 
+    console.log('allProducts', response.data.data.listProducts.items);
     const marketplaceProducts = response.data.data.listProducts.items.filter(
       (product: any) => product.marketplace.name === app
     );
@@ -1172,6 +1174,43 @@ export async function isValidUser(userId: string) {
   return false;
 }
 
+export async function updateMarketplaceConfig(
+  oracleWalletID: string,
+  oracleTokenName: string
+) {
+  try {
+    const response = await axios.post(
+      graphqlEndpoint,
+      {
+        query: `
+        mutation UpdateMarketplace($input: UpdateMarketplaceInput!) {
+          updateMarketplace(input: $input) {
+            id
+          }
+        }
+      `,
+        variables: {
+          input: {
+            id: process.env['NEXT_PUBLIC_MARKETPLACE_NAME']?.toLowerCase(),
+            oracleWalletID: oracleWalletID,
+            oracleTokenName: oracleTokenName,
+          },
+        },
+      },
+      {
+        headers: {
+          'x-api-key': awsAppSyncApiKey,
+        },
+      }
+    );
+
+    return response;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
 export async function validateUserStep2(userId: string) {
   try {
     const response = await axios.post(
@@ -1932,6 +1971,42 @@ export async function updateOrder(objeto: any) {
   }
 }
 
+export async function getOracleWalletId(marketplace: string) {
+  try {
+    const response = await axios.post(
+      graphqlEndpoint,
+      {
+        query: `query listMarketplaces {
+          listMarketplaces(filter: {id: {eq: "${marketplace}"}}) {
+            items {
+              id
+              name
+              oracleTokenName
+              oracleWalletID
+            }
+          }
+        }`,
+      },
+      {
+        headers: {
+          'x-api-key': awsAppSyncApiKey,
+        },
+      }
+    );
+
+    if (response.data.data.listMarketplaces) {
+      return (
+        response.data.data.listMarketplaces.items[0].oracleWalletID || false
+      );
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
 export async function createTransaction({
   addressDestination,
   addressOrigin,
@@ -2352,8 +2427,7 @@ export async function listTokensDashboard(productID: string) {
   }
 }
 
-
-export async function getScriptTokenAccess(marketplace: string){
+export async function getScriptTokenAccess(marketplace: string) {
   try {
     const response = await axios.post(
       graphqlEndpoint,
@@ -2384,7 +2458,9 @@ export async function getScriptTokenAccess(marketplace: string){
 }
 
 export async function createClaimedToken(
-  marketplaceID : string, walletID: string ) {
+  marketplaceID: string,
+  walletID: string
+) {
   try {
     const response = await axios.post(
       graphqlEndpoint,
@@ -2402,8 +2478,7 @@ export async function createClaimedToken(
         variables: {
           input: {
             marketplaceID: marketplaceID,
-            walletID: walletID
-
+            walletID: walletID,
           },
         },
       },
@@ -2421,7 +2496,10 @@ export async function createClaimedToken(
   }
 }
 
-export async function checkClaimedToken(marketplaceID: string, walletID: string) {
+export async function checkClaimedToken(
+  marketplaceID: string,
+  walletID: string
+) {
   try {
     const response = await axios.post(
       graphqlEndpoint,
@@ -2443,11 +2521,11 @@ export async function checkClaimedToken(marketplaceID: string, walletID: string)
       }
     );
     if (response.data.data.listClaimedTokens.items.length > 0) {
-      return true
+      return true;
     }
-    return false
+    return false;
   } catch (error) {
     console.log(error);
-    return false
+    return false;
   }
 }

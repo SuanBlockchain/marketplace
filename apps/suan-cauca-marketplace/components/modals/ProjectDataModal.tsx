@@ -264,14 +264,14 @@ export default function ProjectDataModal({
             ></GoogleMapReact>
           </div>
         </div>
-        <div className="bg-[#F4F8F9] rounded-lg">
+        {/* <div className="bg-[#F4F8F9] rounded-lg">
           <PostulantInfoCard
             name={projectData.projectPostulant.name}
             email={projectData.projectPostulant.email}
             docType={projectData.projectPostulant.docType}
             docNumber={projectData.projectPostulant.docNumber}
           />
-        </div>
+        </div> */}
         <div className="bg-[#F4F8F9] rounded-lg">
           <ActualUseAndPotentialInfoCard
             actualUse={projectData.projectUses.actualUse}

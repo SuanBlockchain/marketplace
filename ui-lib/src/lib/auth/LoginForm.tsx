@@ -18,6 +18,22 @@ const VerifyCodeMFA = (props: any) => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCode(event.target.value);
   };
+
+
+  const verifyMFA = async (codeMFA: string) => {
+    setLoading(true);
+    try {
+      const result2 = await confirmSignIn({ challengeResponse: codeMFA });
+      return router.replace('/');
+    } catch (error) {
+      toast.error(
+        <span className={colors.fuente}>Código inválido</span>
+      );
+      setCode('');
+    } finally {
+      setLoading(false);
+    }
+  };
   const marketplaceName =
   process.env.NEXT_PUBLIC_MARKETPLACE_NAME || 'Marketplace';
 const marketplaceColors: Record<
@@ -50,22 +66,6 @@ const colors = marketplaceColors[marketplaceName] || {
   fuenteAlterna: 'font-medium',
   fuenteVariante: 'font-normal',
 };
-
-  const verifyMFA = async (codeMFA: string) => {
-    setLoading(true);
-    try {
-      const result2 = await confirmSignIn({ challengeResponse: codeMFA });
-      return router.replace('/');
-    } catch (error) {
-      toast.error(
-        <span className={colors.fuente}>Código inválido</span>
-      );
-      setCode('');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div>
       <h1
@@ -198,7 +198,7 @@ const LoginForm = (props: LoginFormProps) => {
           errorMessage = 'Problema de red, intenta nuevamente'; // Posible mensaje para errores de red
           break;
         default:
-          errorMessage = 'Error desconocido';
+          errorMessage = 'Error desconocido, no olvide cerrar su usuario, antes de continuar con un nuevo ingreso';
       }
 
       setErrors((preForm: any) => ({
@@ -209,7 +209,38 @@ const LoginForm = (props: LoginFormProps) => {
       setLoading(false);
     }
   };
+  const marketplaceName =
+  process.env.NEXT_PUBLIC_MARKETPLACE_NAME || 'Marketplace';
+const marketplaceColors: Record<
+  string,
+  {
+    bgColor: string;
+    hoverBgColor: string;
+    bgColorAlternativo: string;
+    fuente: string;
+    fuenteAlterna: string;
+    fuenteVariante:string;
+  }
+> = {
+  Terrasacha: {
+    bgColor: 'bg-custom-marca-boton',
+    hoverBgColor: 'hover:bg-custom-marca-boton-variante',
+    bgColorAlternativo: 'bg-custom-marca-boton-alterno2',
+    fuente: 'font-jostBold',
+    fuenteAlterna: 'font-jostRegular',
+    fuenteVariante: 'font-jostItalic',
+  },
 
+  // Agrega más marketplaces y colores aquí
+};
+const colors = marketplaceColors[marketplaceName] || {
+  bgColor: 'bg-custom-dark',
+  hoverBgColor: 'hover:bg-custom-dark-hover',
+  bgColorAlternativo: 'bg-amber-400',
+  fuente: 'font-semibold',
+  fuenteAlterna: 'font-medium',
+  fuenteVariante: 'font-normal',
+};
   return (
     <div className="bg-white rounded-2xl w-[35rem] max-w-[35rem] 2xl:w-[38%] py-10 px-12 sm:px-20 h-auto flex flex-col justify-center">
       <div className="w-full flex justify-center mb-8">
@@ -235,6 +266,19 @@ const LoginForm = (props: LoginFormProps) => {
           >
             {errors.loginError}
           </p>
+                            {/* Botón de información */}
+      <div className="relative group inline-block">
+      <button className={`v text-gray-400 ml-2`}>
+        <div className="text-yellow-500 p-2 flex items-center">
+          <AiOutlineInfoCircle size={30} className="cursor-pointer text-orange-500" />
+        </div>
+      </button>
+      
+      {/* Tooltip */}
+      <div className={`${colors.fuenteVariante}  absolute invisible group-hover:visible bg-black text-white text-lg rounded py-1 px-2 bottom-full mb-1`}>
+      El username-nombre de usuario no puede contener espacios ni caracteres especiales. El password, contraseña debe tener más de 8 caracteres y poseer al menos un valor numérico
+      </div>
+    </div>
           <form className="pt-10" onSubmit={(e) => e.preventDefault()}>
             <div className="relative z-0 w-full mb-4 group">
               <input
@@ -246,7 +290,11 @@ const LoginForm = (props: LoginFormProps) => {
                 placeholder="username"
                 required
               />
+              
             </div>
+
+
+
             <div className="relative z-0 w-full mb-4 group">
               <input
                 type={showInfo.password ? 'text' : 'password'}
@@ -309,7 +357,7 @@ const LoginForm = (props: LoginFormProps) => {
               href={'/auth/forgot-password'}
               className="text-[#50A4FF] text-sm"
             >
-              ¿Olvidaste tu contraseña?
+              ¿Olvidaste tu contraseña? Cliqueame
             </Link>
           </p>
         </>

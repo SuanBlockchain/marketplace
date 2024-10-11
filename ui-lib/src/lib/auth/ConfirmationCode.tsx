@@ -127,7 +127,7 @@ const ConfirmCode = (props: ConfirmCodeProps) => {
     <div className="bg-white rounded-2xl w-[35rem] max-w-[35rem] 2xl:w-[38%] py-10 px-12 sm:px-20 h-auto flex flex-col justify-center">
       <div className="w-full flex justify-center mb-8">
         <Image
-          src={logo}
+           src="/v2/logoterrasacha.svg"
           width={widthLogo}
           height={heightLogo}
           alt={appName + ' Logo'}

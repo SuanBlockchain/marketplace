@@ -1,4 +1,4 @@
-import { createTransaction } from "@marketplaces/data-access";
+import { createTransaction, getOracleWalletId } from "@marketplaces/data-access";
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
@@ -7,7 +7,15 @@ export default async function handler(req, res) {
 
       const order_side = payload.order_side;
 
-      const url = `${process.env.NEXT_PUBLIC_TRAZABILIDAD_ENDPOINT}/api/v1/transactions/unlock-order/${order_side}`;
+      const oracleWalletId = await getOracleWalletId(
+        process.env['NEXT_PUBLIC_MARKETPLACE_NAME'].toLowerCase()
+      );
+
+      if (!oracleWalletId) {
+        res.status(500).json({ error: 'Error al procesar la solicitud' });
+      }
+
+      const url = `${process.env.NEXT_PUBLIC_TRAZABILIDAD_ENDPOINT}/api/v1/transactions/unlock-order/${order_side}?oracle_wallet_id=${oracleWalletId}`;
 
       const response = await fetch(url, {
         method: 'POST',

@@ -11,6 +11,7 @@ import {
 import { useRouter } from 'next/router';
 import { toast } from 'sonner';
 import { mapAccountTxData } from '@marketplaces/utils-2/src/lib/mappers/mapTransactionInfo';
+import { MessageList } from '../ui-lib';
 
 interface TransactionsProps {
   txPerPage: number;
@@ -318,6 +319,7 @@ export default function Transactions(props: TransactionsProps) {
               />
             </div>
           )}
+          {/* <MessageList/> */}
           <p>Historial de transacciones de billetera</p>
           <LoadingOverlay visible={isLoading} className="space-y-2">
             {transactionsList &&

@@ -8,6 +8,7 @@ interface SignTransactionModalProps {
   signTransactionModal: boolean;
   newTransactionBuild: any;
   signType: string;
+  isCollapsed?: boolean;
 }
 
 const SEARCH_TYPE = {
@@ -22,6 +23,7 @@ export default function SignTransactionModal(props: SignTransactionModalProps) {
     signTransactionModal,
     newTransactionBuild,
     signType,
+    isCollapsed = false,
   } = props;
   const marketplaceName = process.env.NEXT_PUBLIC_MARKETPLACE_NAME || 'Marketplace';
   const marketplaceColors: Record<string, { bgColor: string; hoverBgColor: string;bgColorAlternativo:string;fuente:string;fuenteAlterna:string;}> = {
@@ -73,7 +75,7 @@ export default function SignTransactionModal(props: SignTransactionModalProps) {
               tx_size={newTransactionBuild.tx_size}
               inputUTxOs={newTransactionBuild.inputUTxOs}
               outputUTxOs={newTransactionBuild.outputUTxOs}
-              is_collapsed={false}
+              is_collapsed={isCollapsed}
               metadata={newTransactionBuild.metadata}
             />
           </Modal.Body>

@@ -1,18 +1,1 @@
-{
-  "authSelections": "identityPoolAndUserPool",
-  "resourceName": "marketpsuane5dd0829",
-  "serviceType": "imported",
-  "region": "us-east-1",
-  "requiredAttributes": [
-    "email"
-  ],
-  "passwordPolicyMinLength": 8,
-  "passwordPolicyCharacters": [],
-  "mfaConfiguration": "OPTIONAL",
-  "autoVerifiedAttributes": [
-    "email"
-  ],
-  "mfaTypes": [
-    "TOTP"
-  ]
-}
+

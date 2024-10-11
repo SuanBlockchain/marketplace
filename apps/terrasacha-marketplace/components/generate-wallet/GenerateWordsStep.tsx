@@ -89,7 +89,7 @@ const GenerateWordsStep = (props: any) => {
       {words === null && (
         <div className="flex w-full justify-end mt-3 font-jostBold">
           <Button
-           className="group flex h-min items-center justify-center p-1 text-center font-medium focus:z-10 focus:outline-none text-white bg-custom-marca-boton-alterno  enabled:hover:bg-custom-marca-boton-alterno2 border border-transparent  dark:bg-cyan-600 dark:enabled:hover:bg-cyan-700  rounded-lg focus:ring-2 px-8 ml-4"
+           className="font-jostBold relative group flex items-center h-10 justify-center p-1 text-center font-medium focus:z-10 focus:outline-none text-white bg-custom-marca-boton  enabled:hover:bg-custom-marca-boton-variante border border-transparent rounded-lg focus:ring-2 px-8 ml-4"
             onClick={() =>{ setCurrentSection(1); router.push('/')}}
             color="gray"
           >

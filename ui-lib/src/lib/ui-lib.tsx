@@ -35,6 +35,7 @@ import Transactions from './wallet/Transactions';
 import Assets from './wallet/assets/Assets';
 import Modal from './common/Modal';
 import Card from './common/Card';
+import MessageList from './common/MessageList';
 import Tooltip from './common/Tooltip';
 import PageHeader from './common/PageHeader';
 import LoadingOverlay from './common/LoadingOverlay';
@@ -69,6 +70,7 @@ import { PlusIcon } from './icons/PlusIcon';
 import { PencilIcon } from './icons/PencilIcon';
 import { ScaleIcon } from './icons/ScaleIcon';
 import { LockIcon } from './icons/LockIcon';
+import { InfoIcon } from './icons/InfoIcon';
 import { LoadingIcon } from './icons/LoadingIcon';
 import { BookIcon } from './icons/BookIcon';
 import { ChartIcon } from './icons/ChartIcon';
@@ -123,6 +125,7 @@ export {
   RedirectToHome,
   Card,
   Tooltip,
+  MessageList,
   PageHeader,
   LineChartComponent,
   BarGraphComponent,
@@ -158,6 +161,7 @@ export {
   PencilIcon,
   ScaleIcon,
   LockIcon,
+  InfoIcon,
   LoadingIcon,
   BookIcon,
   ChartIcon,

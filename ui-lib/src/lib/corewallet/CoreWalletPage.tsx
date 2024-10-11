@@ -54,6 +54,37 @@ export default function CoreWallet(props: any) {
     return balanceData.balance;
   };
 
+  const configureMarketplace = async () => {
+    setLoadingSendTokenAccess(true)
+    
+    const payload = {
+      walletID: walletID,
+      walletAddress: walletAddress
+    }
+    
+    try {
+      const request = await fetch('/api/marketplace/configure', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+      
+      const response = await request.json();
+      if(response) {
+        setSendTokenAccess(true)
+      }
+
+      console.log('Respuesta de configuración de marketplace: ', response)
+    } catch (error) {
+      console.log(`Error configurando marketplace ${error}`)
+    } finally {
+      setLoadingSendTokenAccess(false)
+
+    }
+  }
+
   const generateTokenAccess = async () =>{
     const url = `${process.env.NEXT_PUBLIC_TRAZABILIDAD_ENDPOINT}/api/v1/helpers/send-access-token/?wallet_id=${walletID}&destinAddress=${walletAddress}&marketplace_id=${process.env.NEXT_PUBLIC_MARKETPLACE_NAME?.toLocaleLowerCase()}&save_flag=true`
     setLoadingSendTokenAccess(true)
@@ -251,7 +282,7 @@ const colors = marketplaceColors[marketplaceName] || {
                 </div>
                
                 <button 
-                onClick={() => generateTokenAccess()} disabled={loadingSendTokenAccess} className={`text-white ${colors.fuente} ${colors.bgColor} ${colors.hoverBgColor} relative py-2 px-6 rounded-md  text-sm hover:bg-blue-400  min-h-10 min-w-40`}>
+                onClick={() => configureMarketplace()} disabled={loadingSendTokenAccess} className={`text-white ${colors.fuente} ${colors.bgColor} ${colors.hoverBgColor} relative py-2 px-6 rounded-md  text-sm hover:bg-blue-400  min-h-10 min-w-40`}>
                 {loadingSendTokenAccess ? (
                     <TailSpin
                       width="20"

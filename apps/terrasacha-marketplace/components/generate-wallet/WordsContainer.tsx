@@ -39,7 +39,7 @@ const WordsContainer = (props: any) => {
     <div className="w-full  h-24 rounded-xl flex justify-center items-center palabras">
       <p>
         <Button
-          className="relative group flex items-center h-10 justify-center p-1 text-center font-medium focus:z-10 focus:outline-none text-white bg-custom-marca-boton  enabled:hover:bg-custom-marca-boton-variante border border-transparent rounded-lg focus:ring-2 px-8 ml-4"
+          className="font-jostBold relative group flex items-center h-10 justify-center p-1 text-center font-medium focus:z-10 focus:outline-none text-white bg-custom-marca-boton  enabled:hover:bg-custom-marca-boton-variante border border-transparent rounded-lg focus:ring-2 px-8 ml-4"
           onClick={() => generateWords()}
         >
           {loading ? (
@@ -55,7 +55,7 @@ const WordsContainer = (props: any) => {
       </p>
     </div>
   ) : (
-    <div className="relative w-full palabras-bg h-auto rounded-xl text-custom-marca-boton">
+    <div className=" relative w-full palabras-bg h-auto rounded-xl text-custom-marca-boton">
       {useCase === 'generate' && (
         <button
           onClick={() => copyToClipboard()}

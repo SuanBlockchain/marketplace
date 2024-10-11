@@ -83,9 +83,7 @@ const EnableMFA = (props: any) => {
 
       const dataToAPI: dataToShareMFA = {
         username: userData.username,
-        env: process.env.NEXT_PUBLIC_HOST?.includes('test')
-          ? 'DEV'
-          : 'PRODUCTION',
+        env: process.env.NEXT_PUBLIC_ENV || 'INTERNAL',
         secret: secretMFA,
       };
       if (

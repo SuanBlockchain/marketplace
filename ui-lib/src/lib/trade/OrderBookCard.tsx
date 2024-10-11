@@ -490,6 +490,7 @@ export default function OrderBookCard(props: OrderBookCardProps) {
         handleOpenSignTransactionModal={handleOpenSignTransactionModal}
         newTransactionBuild={newTransactionBuild}
         signType="unlockOrder"
+        isCollapsed={false}
       />
     </>
   );

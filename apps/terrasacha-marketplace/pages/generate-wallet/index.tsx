@@ -64,18 +64,19 @@ const GenerateWalletPage: MyPage = (props: any) => {
   }
   if (!wallet) return <div>Cargando...</div>;
   return (
-    <div className="relative w-full min-h-screen flex bg-slate-200 justify-center items-center">
+<div className="relative w-full min-h-screen flex bg-slate-200 justify-center items-center">
   <div className="absolute inset-0 z-0">
     <Image
       priority={true}
-  src="/v2/bg3.avif"
-        alt="landing-suan-image"
+              src="/v2/bg3.avif"
+      alt="landing-suan-image"
       layout="fill"
       objectFit="cover"
       objectPosition="center"
       className="z-0"
     />
   </div>
+ 
   <div className="relative z-10 mt-10 mb-10 w-[50rem] h-auto">
     {isAuthenticated && wallet.length === 0 && <NewWallet />}
     {isAuthenticated && wallet.length > 0 && <AlreadyHasWallet />}

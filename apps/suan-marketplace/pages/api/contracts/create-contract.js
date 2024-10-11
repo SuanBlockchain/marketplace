@@ -1,15 +1,25 @@
+import { getOracleWalletId } from "@marketplaces/data-access";
+
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     try {
       const payload = req.body; // Utiliza req.body en lugar de req.query para obtener datos del cuerpo de la solicitud
       const script_type = payload.script_type;
 
+      const oracleWalletId = await getOracleWalletId(
+        process.env['NEXT_PUBLIC_MARKETPLACE_NAME'].toLowerCase()
+      );
+
+      if (!oracleWalletId) {
+        res.status(500).json({ error: 'Error al procesar la solicitud' });
+      }
+
       let payloadFixed = {
         name: payload.name,
         wallet_id: payload.wallet_id,
         tokenName: payload.tokenName,
         save_flag: payload.save_flag,
-        oracle_wallet_name: payload.oracle_wallet_name,
+        oracle_wallet_id: oracleWalletId,
       };
 
       if (

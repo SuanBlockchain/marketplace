@@ -11,7 +11,7 @@ import { MarketIcon } from '../icons/MarketIcon';
 import { ScaleIcon } from '../icons/ScaleIcon';
 import WalletIcon from '../icons/WalletIcon';
 import { WalletContext } from '@marketplaces/utils-2';
-import { LoadingIcon, SquareArrowUpIcon } from '../ui-lib';
+import { InfoIcon, LoadingIcon, SquareArrowUpIcon } from '../ui-lib';
 import SideBarBalanceSkeleton from '../common/skeleton/SideBarBalanceSkeleton';
 import { fetchUserAttributes } from 'aws-amplify/auth';
 interface SidebarProps {
@@ -66,7 +66,7 @@ export default function Sidebar(props: SidebarProps) {
     useState<boolean>(false);
   const [env, setEnv] = useState('')
   useEffect(() =>{
-    const env = process.env.NEXT_PUBLIC_HOST?.includes('test')? 'TEST' : 'PRODUCTION'
+    const env = process.env.NEXT_PUBLIC_ENV || ''
     setEnv(env)
     fetchUserAttributes().then((data :any)=>{
       if(data['custom:role'] === 'marketplace_admin' && data['custom:subrole'] === process.env.NEXT_PUBLIC_MARKETPLACE_NAME?.toLocaleLowerCase()){
@@ -244,6 +244,10 @@ export default function Sidebar(props: SidebarProps) {
                   : 'text-black'
               }`}
             >
+              <div className='inline' data-tooltip-id="available-tooltip" data-tooltip-content={`Cantidad de ADAs disponibles`}>
+                <InfoIcon className="h-4 w-4 inline mr-1" />
+              </div>
+              <Tooltip id="available-tooltip" />
               <span>Disponible: </span>
               {!isLoading ? (walletAvailableBalance / 1000000).toFixed(4) : <LoadingIcon className="h-5 w-5" />}{' '}
               <span className="text-gray-400 text-xs">ADA</span>
@@ -257,6 +261,10 @@ export default function Sidebar(props: SidebarProps) {
                   : 'text-black'
               }`}
             >
+              <div className='inline' style={{zIndex: 1000}} data-tooltip-id="blocked-tooltip" data-tooltip-content={`En Cardano, cualquier token debe ir asociado a una cantidad de ADAs. Esta cantidad es la que se encuentra bloqueada para la billetera.`}>
+                <InfoIcon className="h-4 w-4 inline mr-1" />
+              </div>
+              <Tooltip id="blocked-tooltip" style={{zIndex: 1000}}/>
               <span>Bloqueado: </span>
               {!isLoading ? (walletLockedBalance / 1000000).toFixed(4) : <LoadingIcon className="h-5 w-5" />}{' '}
               <span className="text-gray-400 text-xs">ADA</span>

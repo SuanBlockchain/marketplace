@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { TailSpin } from 'react-loader-spinner';
 import { BsFillEyeFill, BsFillEyeSlashFill } from 'react-icons/bs';
+import { AiOutlineInfoCircle } from 'react-icons/ai';
 export interface ConfirmPasswordProps {
   logo: string;
   widthLogo: number;
@@ -94,11 +95,43 @@ const ConfirmPassword = (props: ConfirmPasswordProps) => {
       [name]: !showInfo[name],
     });
   };
+  const marketplaceName =
+  process.env.NEXT_PUBLIC_MARKETPLACE_NAME || 'Marketplace';
+const marketplaceColors: Record<
+  string,
+  {
+    bgColor: string;
+    hoverBgColor: string;
+    bgColorAlternativo: string;
+    fuente: string;
+    fuenteAlterna: string;
+    fuenteVariante:string;
+  }
+> = {
+  Terrasacha: {
+    bgColor: 'bg-custom-marca-boton',
+    hoverBgColor: 'hover:bg-custom-marca-boton-variante',
+    bgColorAlternativo: 'bg-custom-marca-boton-alterno2',
+    fuente: 'font-jostBold',
+    fuenteAlterna: 'font-jostRegular',
+    fuenteVariante: 'font-jostItalic',
+  },
+
+  // Agrega más marketplaces y colores aquí
+};
+const colors = marketplaceColors[marketplaceName] || {
+  bgColor: 'bg-custom-dark',
+  hoverBgColor: 'hover:bg-custom-dark-hover',
+  bgColorAlternativo: 'bg-amber-400',
+  fuente: 'font-semibold',
+  fuenteAlterna: 'font-medium',
+  fuenteVariante: 'font-normal',
+};
   return (
     <div className="bg-white rounded-2xl w-[35rem] max-w-[35rem] 2xl:w-[38%] py-10 px-12 sm:px-20 h-auto flex flex-col justify-center">
       <div className="w-full flex justify-center mb-8">
         <Image
-          src={logo}
+          src="/v2/logoterrasacha.svg"
           width={widthLogo}
           height={heightLogo}
           alt={`${appName} Logo`}
@@ -112,6 +145,18 @@ const ConfirmPassword = (props: ConfirmPasswordProps) => {
           <h4 className="font-jostRegular text-1xl font-normal">
             Ingrese sus datos:
           </h4>
+          <div className="relative group inline-block">
+      <button className={`v text-gray-400 ml-2`}>
+        <div className="text-yellow-500 p-2 flex items-center">
+          <AiOutlineInfoCircle size={30} className="cursor-pointer text-orange-500" />
+        </div>
+      </button>
+      
+      {/* Tooltip */}
+      <div className={`${colors.fuenteVariante}  absolute invisible group-hover:visible bg-black text-white text-lg rounded py-1 px-2 bottom-full mb-1`}>
+      El username-nombre de usuario no puede contener espacios ni caracteres especiales.
+      </div>
+    </div>
           <p
             className={`${
               errors.loginError === '' && 'hidden'
@@ -134,13 +179,11 @@ const ConfirmPassword = (props: ConfirmPasswordProps) => {
                 value={loginForm.username}
                 name="username"
                 onChange={handleChange}
-                className="font-jostRegular mb-10 block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                placeholder=" "
+                className="font-jostRegular block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-400 focus:outline-none focus:ring-0 focus:border-blue-400 peer"
+                placeholder="username"
                 required
               />
-              <label className="font-jostRegular mb-4 peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                Username
-              </label>
+            
             </div>
           </form>
           <button
@@ -175,6 +218,19 @@ const ConfirmPassword = (props: ConfirmPasswordProps) => {
           >
             {errors.loginError}
           </p>
+                                    {/* Botón de información */}
+      <div className="relative group inline-block">
+      <button className={`v text-gray-400 ml-2`}>
+        <div className="text-yellow-500 p-2 flex items-center">
+          <AiOutlineInfoCircle size={30} className="cursor-pointer text-orange-500" />
+        </div>
+      </button>
+      
+      {/* Tooltip */}
+      <div className={`${colors.fuenteVariante}  absolute invisible group-hover:visible bg-black text-white text-lg rounded py-1 px-2 bottom-full mb-1`}>
+      El username-nombre de usuario no puede contener espacios ni caracteres especiales. El password, contraseña debe tener más de 8 caracteres y poseer al menos un valor numérico
+      </div>
+    </div>
           <form className="pt-10" onSubmit={(e) => submitFormRecovery(e)}>
             <div className="relative z-0 w-full mb-6 group">
               <input

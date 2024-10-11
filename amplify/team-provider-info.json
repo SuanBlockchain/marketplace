@@ -37,12 +37,34 @@
     "categories": {
       "auth": {
         "marketplacesuan86c6a6e0": {
+          "nativeClientId": "5ug6uhifnv610ocis2bcli5gt5",
           "userPoolId": "us-east-1_4jexv6wdn",
           "userPoolName": "platform82accf3f_userpool_82accf3f-dev",
-          "webClientId": "3qu68fsupfvkve4cf3lu8takri",
-          "nativeClientId": "5ug6uhifnv610ocis2bcli5gt5"
-        },
-        "marketpsuane5dd0829": {}
+          "webClientId": "3qu68fsupfvkve4cf3lu8takri"
+        }
+      }
+    }
+  },
+  "internal": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-marketplacesuan-internal-561c2-authRole",
+      "UnauthRoleArn": "arn:aws:iam::036134507423:role/amplify-marketplacesuan-internal-561c2-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::036134507423:role/amplify-marketplacesuan-internal-561c2-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-marketplacesuan-internal-561c2-deployment",
+      "UnauthRoleName": "amplify-marketplacesuan-internal-561c2-unauthRole",
+      "StackName": "amplify-marketplacesuan-internal-561c2",
+      "StackId": "arn:aws:cloudformation:us-east-1:036134507423:stack/amplify-marketplacesuan-internal-561c2/bdd22c00-7b81-11ef-b7c3-0affc0b5faa9",
+      "AmplifyAppId": "d2h2yvb6fy5h0q"
+    },
+    "categories": {
+      "auth": {
+        "marketplacesuan86c6a6e0": {
+          "userPoolId": "us-east-1_UbkfjlXod",
+          "userPoolName": "platform82accf3f_userpool_82accf3f-internal",
+          "webClientId": "4aa7fsknjedin026isvj94i71a",
+          "nativeClientId": "5ngur7dpv17gis1319o9tsjojb"
+        }
       }
     }
   }

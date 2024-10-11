@@ -40,11 +40,11 @@ export default function TradeCard(props: any) {
 
       const spendSwapId =
         scriptList.find((script: any) => script.script_type === 'spendSwap')
-          .id || '';
+          ?.id || '';
 
       const spendSwapAddress =
         scriptList.find((script: any) => script.script_type === 'spendSwap')
-          .testnetAddr || '';
+          ?.testnetAddr || '';
       console.log('spendSwap', spendSwapId);
 
       setSpendSwapId(spendSwapId);

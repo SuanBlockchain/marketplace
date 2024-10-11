@@ -94,9 +94,10 @@ const CreateCredentials = (props: any) => {
   };
   const createWallet = async () => {
     const info = {
-      save_flag: true,
+      mnemonic_words: recoveryWords.join(' '),
+      wallet_type: 'user',
       userID: user,
-      words: recoveryWords.join(' '),
+      save_flag: true,
     };
     console.log(info, 'info');
     try {
@@ -115,7 +116,7 @@ const CreateCredentials = (props: any) => {
         const response2 = await fetch('api/calls/backend/updateWallet', {
           method: 'POST',
           body: JSON.stringify({
-            id: data.data.wallet_id,
+            id: data.wallet_id,
             name: inputValue.walletname,
             passphrase: inputValue.password,
             isAdmin: userIsAdmin

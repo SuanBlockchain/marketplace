@@ -160,7 +160,7 @@ export function WalletContextProvider({
   };
 
   useEffect(() => {
-    let intervalTime = 60000;
+    let intervalTime = 30000;
     let intervalId : any;
     if(!window.sessionStorage.getItem('checkBalance')){
       const timestamp = Date.now()

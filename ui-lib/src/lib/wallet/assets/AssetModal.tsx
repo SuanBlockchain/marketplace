@@ -8,7 +8,7 @@ import {
   defaultStyles,
 } from 'react-json-view-lite';
 import { useEffect, useState } from 'react';
-import { getDateFromTimeStamp } from '@marketplaces/utils-2';
+import { getDateFromTimeStamp, hexToText, textToHex } from '@marketplaces/utils-2';
 
 interface AssetModalProps {
   assetData: any;
@@ -42,14 +42,16 @@ export default function AssetModal(props: AssetModalProps) {
       );
       const policyIdAssetsInfoResponse = await response.json();
 
+      console.log('policyIdAssetsInfoResponse', policyIdAssetsInfoResponse)
+      console.log('assetData', assetData)
       // Filtrar asset_name
       const assetInfo = policyIdAssetsInfoResponse.find(
-        (asset: any) => asset.asset_name_ascii === assetData.asset_name
+        (asset: any) => asset.asset === assetData.policy_id + textToHex(assetData.asset_name)
       );
 
       let metadata = {};
 
-      if (assetInfo && assetInfo.minting_tx_metadata) {
+      if (assetInfo && assetInfo.metadata) {
         /* Object.entries(assetInfo.minting_tx_metadata).forEach(
           ([key, value]: any) => {
             const metadataInfo = value;
@@ -59,7 +61,7 @@ export default function AssetModal(props: AssetModalProps) {
             };
           }
         ); */
-        metadata = extractInnerObject(assetInfo.minting_tx_metadata);
+        metadata = extractInnerObject(assetInfo.metadata);
       }
 
       /* const cases = {
@@ -174,8 +176,8 @@ export default function AssetModal(props: AssetModalProps) {
                   <td>{assetData.quantity}</td>
                   <td>En circulación: </td>
                   <td>
-                    {assetInfo.total_supply
-                      ? assetInfo.total_supply
+                    {assetInfo.quantity
+                      ? assetInfo.quantity
                       : 'Loading ...'}
                   </td>
                 </tr>
@@ -217,19 +219,19 @@ export default function AssetModal(props: AssetModalProps) {
                   <tr>
                     <td>Nombre del activo:</td>
                     <td>
-                      {assetInfo.asset_name_ascii
-                        ? assetInfo.asset_name_ascii
+                      {assetData.asset_name
+                        ? assetData.asset_name
                         : 'Loading ...'}
                     </td>
                   </tr>
-                  <tr className="bg-gray-600">
+                  {/* <tr className="bg-gray-600">
                     <td>Fecha de creación:</td>
                     <td>
                       {assetInfo.creation_time
                         ? getDateFromTimeStamp(assetInfo.creation_time)
                         : 'Loading ...'}
                     </td>
-                  </tr>
+                  </tr> */}
                 </tbody>
               </table>
             </div>
