@@ -160,7 +160,7 @@ const EnableMFA = (props: any) => {
         <div className="flex p-6 justify-center">
           <div className="w-full flex justify-center">
             {/* Aquí agregamos el logo */}
-            <img src="/v2/logo.svg" alt="Logo" className="h-24 w-auto" />
+            <img src="/images/home-page/suan_logo.png" alt="Logo" className="h-24 w-auto" />
           </div>
         </div>
         <h1 className={`${colors.fuente}  text-3xl  pb-3 text-center`}>

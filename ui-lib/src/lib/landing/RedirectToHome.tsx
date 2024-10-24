@@ -82,7 +82,7 @@ const RedirectToHome = (props: RedirectToHomeProps) => {
             setShowButtonAccess(true);
             tokenFound = true;
           } else {
-            setLoading(false);
+            setStatusText('Token no encontrado, por favor espera...');
           }
         } catch (error) {
           console.error('Error al obtener el saldo de la billetera:', error);
@@ -260,32 +260,39 @@ const RedirectToHome = (props: RedirectToHomeProps) => {
       }
       </div>
       {checkingWallet === 'hasTokenAuth' &&
-        <div className="flex text-xs gap-2 items-center justify-center ">
+        <div className="flex text-xs gap-4 items-center justify-center  mb-4">
           <TailSpin width="30" color="#0e7490" wrapperClass="" />
         </div>
         }
-      {(checkingWallet === 'requestToken') &&  
-                <button onClick={() => requestToken()} disabled={ claimed } className="relative group flex h-10 items-center justify-center p-2 text-center font-medium focus:z-10 focus:outline-none text-white bg-custom-marca-boton  enabled:hover:bg-custom-marca-boton-variante border border-transparent  dark:bg-cyan-600 dark:enabled:hover:bg-cyan-700  rounded-lg focus:ring-2 px-8 ml-4 ">
-                  {loading ? (
-                      <TailSpin
-                        width="20"
-                        color="#fff"
-                        wrapperClass="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                      />
-                    ) : (
-                      'Solicitar token'
-                    )}
-                </button>
-        }
+    {checkingWallet === 'requestToken' &&  
+  <button 
+    onClick={() => requestToken()} 
+    disabled={claimed} 
+    className="relative group flex h-10 w-full items-center justify-center p-2 text-center font-medium focus:z-10 focus:outline-none text-white bg-black hover:bg-black border border-transparent rounded-lg focus:ring-2 px-8 mt-4 mb-4"
+  >
+    {loading ? (
+      <TailSpin
+        width="20"
+        color="#fff"
+        wrapperClass="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+      />
+    ) : (
+      'Solicitar token'
+    )}
+  </button>
+}
 
-      {checkingWallet !== 'hasTokenAuth' &&<button className="relative group flex h-min items-center justify-center p-1 text-center font-medium focus:z-10 focus:outline-none text-white bg-custom-marca-boton-alterno  enabled:hover:bg-custom-marca-boton-alterno2 border border-transparent focus:ring-cyan-300 dark:bg-cyan-600 dark:enabled:hover:bg-cyan-700 dark:focus:ring-cyan-800 rounded-lg focus:ring-2 px-8 ml-4"
-      onClick={() => {
-        signOut().then(() => router.reload());
-      }}
-    >
-      Cerrar sesión
-    </button>
-    }
+{checkingWallet !== 'hasTokenAuth' && 
+  <button 
+    className="relative group flex h-10 w-full items-center justify-center p-2 text-center font-medium focus:z-10 focus:outline-none text-white bg-black hover:bg-black border border-transparent rounded-lg focus:ring-2 px-8 mt-4 mb-4"
+    onClick={() => {
+      signOut().then(() => router.reload());
+    }}
+  >
+    Cerrar sesión
+  </button>
+}
+
       {poweredby && (
         <div className="flex items-center justify-center mt-4 text-xs">
           Powered by
