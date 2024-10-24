@@ -44,7 +44,7 @@ const Login = (props: any) => {
       <div className="h-auto items-center gap-y-2 flex-col  w-[90%] lg:w-[90%] 2xl:w-[80%] 3xl:w-[70%] flex justify-center 2xl:justify-between z-10">
         <button onClick={() =>  updataMFA()} className='py-2 px-8 bg-slate-300 hover:bg-slate-400 rounded-md'>update MFA preference</button>
         <h2>user: {user}</h2>
-        <EnableMFA qr={setupMFA}/>
+        <EnableMFA qr={setupMFA}  logo="/images/home-page/suan_logo.png"/>
         <VerifyCodeMFA />
       </div>
     </div>
