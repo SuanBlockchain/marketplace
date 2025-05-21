@@ -1,4 +1,4 @@
-import MainLayout from "./MainLayout"
+import MainLayout from "./MainLayout";
 import NoLayout from "./NoLayout";
 export const Layouts = {
   Main: MainLayout,
