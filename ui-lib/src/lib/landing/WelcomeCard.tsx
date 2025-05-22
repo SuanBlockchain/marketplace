@@ -41,7 +41,7 @@ const WelcomeCard = (props: WelcomeCardProps) => {
     }
   }
   return (
-    <div className="bg-white rounded-2xl w-[40rem] max-w-[35rem] 2xl:w-[45%] py-10 px-10 sm:px-10 h-auto flex flex-col justify-center">
+    <div className="bg-white rounded-2xl w-full max-w-sm md:max-w-md lg:max-w-lg 2xl:w-[45%] py-6 px-6 sm:px-8 h-auto flex flex-col justify-center shadow-lg relative">
       {appName === 'Terrasacha' && (
         <div className='flex justify-center'>
         <Image
@@ -53,7 +53,7 @@ const WelcomeCard = (props: WelcomeCardProps) => {
         </div>
       )}
 
-<h2 className="font-jostBold text-3xl  pb-4 flex justify-center text-center mt-8"
+<h2 className="font-jostBold text-2xl  pb-4 flex justify-center text-center mt-8"
 >
       {userData
         ? 'Crea tu billetera o utiliza una preexistente'
@@ -125,9 +125,9 @@ const WelcomeCard = (props: WelcomeCardProps) => {
         <div className="flex items-center justify-center mt-4 text-xs font-jostRegular">
           Powered by
           <Image
-            src="/images/home-page/suan_logo.png"
-            height={10}
-            width={12}
+            src="/v2/logoterrasacha.svg"
+            height={80}
+            width={92}
             className="ml-2"
             alt={`${appName} logo`}
           />

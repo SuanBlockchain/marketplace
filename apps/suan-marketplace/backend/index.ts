@@ -1,9 +1,23 @@
 //import { UTxO } from "@meshsdk/core";
-import axios from "axios";
-import { Category } from "myTypes";
-import { signUp, confirmSignUp, type ConfirmSignUpInput, signIn, type SignInInput, signOut, resetPassword, type ResetPasswordInput, confirmResetPassword, type ConfirmResetPasswordInput, resendSignUpCode, confirmSignIn, type ConfirmSignInInput } from 'aws-amplify/auth';
+import axios from 'axios';
+import { Category } from 'myTypes';
+import {
+  signUp,
+  confirmSignUp,
+  type ConfirmSignUpInput,
+  signIn,
+  type SignInInput,
+  signOut,
+  resetPassword,
+  type ResetPasswordInput,
+  confirmResetPassword,
+  type ConfirmResetPasswordInput,
+  resendSignUpCode,
+  confirmSignIn,
+  type ConfirmSignInInput,
+} from 'aws-amplify/auth';
 /* import { integer } from "aws-sdk/clients/cloudfront"; */
-import { getProduct } from "@suan//lib/customQueries";
+import { getProduct } from '@suan//lib/customQueries';
 /* const AWS = require("aws-sdk");
 
 AWS.config.update(awsconfig); */
@@ -18,7 +32,12 @@ type SignUpParameters = {
   role: string;
 };
 
-export async function signUpAuth({ username, password, email, role }: SignUpParameters) {
+export async function signUpAuth({
+  username,
+  password,
+  email,
+  role,
+}: SignUpParameters) {
   try {
     const response = await signUp({
       username,
@@ -26,57 +45,58 @@ export async function signUpAuth({ username, password, email, role }: SignUpPara
       options: {
         userAttributes: {
           email,
-          'custom:role': role
-        }
-      }
-    })
+          'custom:role': role,
+        },
+      },
+    });
     const userPayload = {
       id: response.userId,
       username,
       role,
-      email
-    }
+      email,
+    };
     const responseApi = await fetch('/api/calls/backend/createUser', {
       method: 'POST',
       body: JSON.stringify(userPayload),
-    })
-    const data = await responseApi.json()
-    return data
+    });
+    const data = await responseApi.json();
+    return data;
   } catch (error) {
-    throw error
+    throw error;
   }
 }
 
-export async function confirmSignUpAuth({ username, confirmationCode }: ConfirmSignUpInput) {
+export async function confirmSignUpAuth({
+  username,
+  confirmationCode,
+}: ConfirmSignUpInput) {
   try {
     let result = await confirmSignUp({ username, confirmationCode });
-    return result
+    return result;
   } catch (error) {
-    throw error
+    throw error;
   }
 }
-
 
 export async function signInAuth({ username, password }: SignInInput) {
-
   try {
-    const user = await signIn({ username, password })
-    return user
+    const user = await signIn({ username, password });
+    return user;
   } catch (error) {
-    throw error
+    throw error;
   }
 }
 
-export async function confirmSignInAuth({ challengeResponse }: ConfirmSignInInput) {
-
+export async function confirmSignInAuth({
+  challengeResponse,
+}: ConfirmSignInInput) {
   try {
-    const response = await confirmSignIn({ challengeResponse })
-    return response
+    const response = await confirmSignIn({ challengeResponse });
+    return response;
   } catch (error) {
-    throw error
+    throw error;
   }
 }
-
 
 export async function signOutAuth() {
   try {
@@ -89,41 +109,50 @@ export async function signOutAuth() {
 export async function forgotPassword({ username }: ResetPasswordInput) {
   try {
     const data = await resetPassword({ username });
-    console.log(data, 'forgotPassword')
-    return data
+    console.log(data, 'forgotPassword');
+    return data;
   } catch (err) {
-    throw err
+    throw err;
   }
-};
+}
 
 export async function forgotPasswordSubmit({
   username,
   confirmationCode,
-  newPassword
+  newPassword,
 }: ConfirmResetPasswordInput) {
   try {
     await confirmResetPassword({ username, confirmationCode, newPassword });
-    return { code: "Success", message: "Password changed successfully" }
+    return { code: 'Success', message: 'Password changed successfully' };
   } catch (err) {
-    throw err
+    throw err;
   }
-};
+}
 
 export const handleResendCode = async (username: string) => {
-  const {
-    destination,
-    deliveryMedium,
-    attributeName
-  } = await resendSignUpCode({ username });
-}
+  const { destination, deliveryMedium, attributeName } = await resendSignUpCode(
+    { username }
+  );
+};
 
 const instance = axios.create({
   baseURL: `/api/`,
   withCredentials: true,
 });
-const awsAppSyncApiKey: string = "da2-ybsfm4er7rextmyiiylwwjo6au"
-const graphqlEndpoint: string = "https://4iaizxnzbjaajd2qdjnl3dpamm.appsync-api.us-east-1.amazonaws.com/graphql"
-export function post(route: string, body = {}) {
+let graphqlEndpoint: string;
+let awsAppSyncApiKey: string;
+if (process.env['NEXT_PUBLIC_API_KEY_PLATAFORMA']) {
+  awsAppSyncApiKey = process.env['NEXT_PUBLIC_API_KEY_PLATAFORMA'];
+} else {
+  throw new Error(`Parameter graphqlEndpoint not found`);
+}
+if (process.env['NEXT_PUBLIC_graphqlEndpoint']) {
+  graphqlEndpoint = process.env['NEXT_PUBLIC_graphqlEndpoint'];
+} else {
+  throw new Error(`Parameter graphqlEndpoint not found`);
+}
+
+export async function post(route: string, body = {}) {
   return instance
     .post(`${route}`, body)
     .then(({ data }) => {
@@ -191,7 +220,7 @@ export async function getCategories() {
     },
     {
       headers: {
-        "x-api-key": awsAppSyncApiKey,
+        'x-api-key': awsAppSyncApiKey,
       },
     }
   );
@@ -293,7 +322,7 @@ export async function getProjects() {
       },
       {
         headers: {
-          "x-api-key": awsAppSyncApiKey,
+          'x-api-key': awsAppSyncApiKey,
         },
       }
     );
@@ -302,28 +331,28 @@ export async function getProjects() {
         let countFeatures = product.productFeatures.items.reduce(
           (count: number, pf: any) => {
             // Condicion 1: Tener periodos de precios y cantidad de tokens
-            if (pf.featureID === "GLOBAL_TOKEN_HISTORICAL_DATA") {
+            if (pf.featureID === 'GLOBAL_TOKEN_HISTORICAL_DATA') {
               let data = JSON.parse(pf.value);
               let todaysDate = Date.now();
               if (data.some((date: any) => Date.parse(date.date) > todaysDate))
                 return count + 1;
             }
             // Condicion 2: Tener titulares diligenciados
-            if (pf.featureID === "B_owners") {
-              let data = JSON.parse(pf.value || "[]");
+            if (pf.featureID === 'B_owners') {
+              let data = JSON.parse(pf.value || '[]');
               if (Object.keys(data).length !== 0) return count + 1;
             }
             // Condicion 3: Validador ha oficializado la información financiera
             if (
-              pf.featureID === "GLOBAL_VALIDATOR_SET_FINANCIAL_CONDITIONS" &&
-              pf.value === "true"
+              pf.featureID === 'GLOBAL_VALIDATOR_SET_FINANCIAL_CONDITIONS' &&
+              pf.value === 'true'
             ) {
               return count + 1;
             }
             // Condicion 4: Validador ha oficializado la información tecnica
             if (
-              pf.featureID === "GLOBAL_VALIDATOR_SET_TECHNICAL_CONDITIONS" &&
-              pf.value === "true"
+              pf.featureID === 'GLOBAL_VALIDATOR_SET_TECHNICAL_CONDITIONS' &&
+              pf.value === 'true'
             ) {
               return count + 1;
             }
@@ -335,7 +364,7 @@ export async function getProjects() {
             //   return count + 1;
             // }
             // Condicion 6: Postulante ha aceptado las condiciones
-            if (pf.featureID === "C_ubicacion") {
+            if (pf.featureID === 'C_ubicacion') {
               return count + 1;
             }
             return count;
@@ -355,7 +384,7 @@ export async function getProjects() {
       const documents = verifiablePF
         .map((pf: any) => {
           const docs = pf.documents.items.filter(
-            (document: any) => document.status !== "validatorFile"
+            (document: any) => document.status !== 'validatorFile'
           );
           return docs;
         })
@@ -369,7 +398,7 @@ export async function getProjects() {
 
     return validProducts;
   } catch (error) {
-    console.error("Error fetching projects:", error);
+    console.error('Error fetching projects:', error);
     return [];
   }
 }
@@ -425,7 +454,7 @@ export async function getProjectsFeatures() {
     },
     {
       headers: {
-        "x-api-key": awsAppSyncApiKey,
+        'x-api-key': awsAppSyncApiKey,
       },
     }
   );
@@ -467,7 +496,7 @@ export async function getProjectsByCategory(categoryId: string) {
     },
     {
       headers: {
-        "x-api-key": awsAppSyncApiKey,
+        'x-api-key': awsAppSyncApiKey,
       },
     }
   );
@@ -483,7 +512,7 @@ export async function getProjectData(projectId: string) {
     },
     {
       headers: {
-        "x-api-key": awsAppSyncApiKey,
+        'x-api-key': awsAppSyncApiKey,
       },
     }
   );
@@ -547,7 +576,7 @@ export async function getProject(projectId: string) {
     },
     {
       headers: {
-        "x-api-key": awsAppSyncApiKey,
+        'x-api-key': awsAppSyncApiKey,
       },
     }
   );
@@ -594,16 +623,16 @@ export async function getTransactions() {
       },
       {
         headers: {
-          "x-api-key": awsAppSyncApiKey, // Make sure you have 'awsAppSyncApiKey' defined
+          'x-api-key': awsAppSyncApiKey, // Make sure you have 'awsAppSyncApiKey' defined
         },
       }
     );
 
-    console.log("Hola", response.data.data)
+    console.log('Hola', response.data.data);
 
     return response.data.data.listTransactions.items;
   } catch (error) {
-    console.error("Error fetching transactions:", error);
+    console.error('Error fetching transactions:', error);
     return [];
   }
 }
@@ -612,10 +641,10 @@ export async function getImages(imageURL: string) {
   try {
     const url = `${process.env['NEXT_PUBLIC_s3EndPoint']}public/${imageURL}`;
 
-    const response = await axios.get(url, { responseType: "arraybuffer" });
-    const data = Buffer.from(response.data, "binary").toString("base64");
+    const response = await axios.get(url, { responseType: 'arraybuffer' });
+    const data = Buffer.from(response.data, 'binary').toString('base64');
     const dataImage = `data:${response.headers[
-      "content-type"
+      'content-type'
     ].toLowerCase()};base64,${data}`;
     return dataImage;
   } catch (error) {
@@ -650,7 +679,7 @@ export async function getUser(userId: string) {
     },
     {
       headers: {
-        "x-api-key": awsAppSyncApiKey,
+        'x-api-key': awsAppSyncApiKey,
       },
     }
   );
@@ -673,7 +702,7 @@ export async function verifyWallet(stakeAddress: string) {
       },
       {
         headers: {
-          "x-api-key": awsAppSyncApiKey,
+          'x-api-key': awsAppSyncApiKey,
         },
       }
     );
@@ -703,7 +732,7 @@ export async function getWalletByUser(userId: string): Promise<[id: string]> {
     },
     {
       headers: {
-        "x-api-key": awsAppSyncApiKey,
+        'x-api-key': awsAppSyncApiKey,
       },
     }
   );
@@ -735,14 +764,14 @@ export async function createWallet(rewardAddresses: string, userId: string) {
     },
     {
       headers: {
-        "x-api-key": awsAppSyncApiKey,
+        'x-api-key': awsAppSyncApiKey,
       },
     }
   );
   return response;
 }
 export async function createCoreWallet(id: string, name: string) {
-  if (name === "") name = id;
+  if (name === '') name = id;
   try {
     const response = await axios.post(
       graphqlEndpoint,
@@ -755,7 +784,7 @@ export async function createCoreWallet(id: string, name: string) {
       },
       {
         headers: {
-          "x-api-key": awsAppSyncApiKey,
+          'x-api-key': awsAppSyncApiKey,
         },
       }
     );
@@ -777,7 +806,7 @@ export async function createOrder(objeto: any) {
     },
     {
       headers: {
-        "x-api-key": awsAppSyncApiKey,
+        'x-api-key': awsAppSyncApiKey,
       },
     }
   );
@@ -827,7 +856,7 @@ export async function createTransaction({
     },
     {
       headers: {
-        "x-api-key": awsAppSyncApiKey,
+        'x-api-key': awsAppSyncApiKey,
       },
     }
   );
@@ -851,15 +880,15 @@ export async function updateTransaction({ id, txProcessed, fees }: any) {
     },
     {
       headers: {
-        "x-api-key": awsAppSyncApiKey,
+        'x-api-key': awsAppSyncApiKey,
       },
     }
   );
   return response;
 }
 export async function createUser(userPayload: any) {
-  const { id, username, role, email } = userPayload
-  console.log(username, role, email)
+  const { id, username, role, email } = userPayload;
+  console.log(username, role, email);
   const response = await axios.post(
     graphqlEndpoint,
     {
@@ -878,7 +907,7 @@ export async function createUser(userPayload: any) {
     },
     {
       headers: {
-        "x-api-key": awsAppSyncApiKey,
+        'x-api-key': awsAppSyncApiKey,
       },
     }
   );
@@ -901,7 +930,7 @@ export async function checkIfWalletIsAdmin(walletStakeID: any) {
       },
       {
         headers: {
-          "x-api-key": awsAppSyncApiKey,
+          'x-api-key': awsAppSyncApiKey,
         },
       }
     );
@@ -912,13 +941,13 @@ export async function checkIfWalletIsAdmin(walletStakeID: any) {
       return false;
     }
   } catch (error) {
-    console.error("Error checking wallet admin status:", error);
+    console.error('Error checking wallet admin status:', error);
     return false;
   }
 }
 
 export async function verifyOwners(payload: any) {
-  const endpoint = "https://35mjjiz0fh.execute-api.us-east-1.amazonaws.com/Env";
+  const endpoint = 'https://35mjjiz0fh.execute-api.us-east-1.amazonaws.com/Env';
 
   try {
     const response = await axios.post(endpoint, payload);
@@ -929,44 +958,42 @@ export async function verifyOwners(payload: any) {
       return false;
     }
   } catch (error) {
-    console.error("Error checking wallet admin status:", error);
+    console.error('Error checking wallet admin status:', error);
     return false;
   }
 }
 
-
 export async function getPolygonByCadastralNumber(cadastralNumbers: any) {
   // URL de la consulta
-  const url =
-    `${process.env["NEXT_PUBLIC_CADASTRAL_QUERY_URL"]}/14/query`;
+  const url = `${process.env['NEXT_PUBLIC_CADASTRAL_QUERY_URL']}/14/query`;
 
   const whereClause = `CODIGO IN ('${cadastralNumbers.join("','")}')`;
 
   // Parámetros de la consulta
   const queryParams: any = {
     where: whereClause,
-    objectIds: "",
-    time: "",
-    geometry: "",
-    geometryType: "esriGeometryPoint",
-    inSR: "",
-    spatialRel: "esriSpatialRelIntersects",
-    resultType: "none",
+    objectIds: '',
+    time: '',
+    geometry: '',
+    geometryType: 'esriGeometryPoint',
+    inSR: '',
+    spatialRel: 'esriSpatialRelIntersects',
+    resultType: 'none',
     distance: 0.0,
-    units: "esriSRUnit_Meter",
-    relationParam: "",
+    units: 'esriSRUnit_Meter',
+    relationParam: '',
     returnGeodetic: false,
-    outFields: "*",
+    outFields: '*',
     returnGeometry: true,
     returnCentroid: false,
     returnEnvelope: false,
-    featureEncoding: "esriDefault",
-    multipatchOption: "xyFootprint",
-    maxAllowableOffset: "",
-    geometryPrecision: "",
-    outSR: "",
-    defaultSR: "",
-    datumTransformation: "",
+    featureEncoding: 'esriDefault',
+    multipatchOption: 'xyFootprint',
+    maxAllowableOffset: '',
+    geometryPrecision: '',
+    outSR: '',
+    defaultSR: '',
+    datumTransformation: '',
     applyVCSProjection: false,
     returnIdsOnly: false,
     returnUniqueIdsOnly: false,
@@ -975,19 +1002,19 @@ export async function getPolygonByCadastralNumber(cadastralNumbers: any) {
     returnQueryGeometry: false,
     returnDistinctValues: false,
     cacheHint: false,
-    orderByFields: "",
-    groupByFieldsForStatistics: "",
-    outStatistics: "",
-    having: "",
-    resultOffset: "",
-    resultRecordCount: "",
+    orderByFields: '',
+    groupByFieldsForStatistics: '',
+    outStatistics: '',
+    having: '',
+    resultOffset: '',
+    resultRecordCount: '',
     returnZ: false,
     returnM: false,
     returnExceededLimitFeatures: true,
-    quantizationParameters: "",
-    sqlFormat: "none",
-    f: "pgeojson",
-    token: "",
+    quantizationParameters: '',
+    sqlFormat: 'none',
+    f: 'pgeojson',
+    token: '',
   };
 
   // Construir la URL completa con los parámetros
@@ -998,6 +1025,6 @@ export async function getPolygonByCadastralNumber(cadastralNumbers: any) {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error al realizar la solicitud:", error);
+    console.error('Error al realizar la solicitud:', error);
   }
-};
+}

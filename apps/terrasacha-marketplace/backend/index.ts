@@ -2,7 +2,21 @@
 import axios from 'axios';
 import { Category } from 'myTypes';
 import { Amplify } from 'aws-amplify';
-import { signUp, confirmSignUp, type ConfirmSignUpInput, signIn, type SignInInput, signOut, resetPassword, type ResetPasswordInput, confirmResetPassword, type ConfirmResetPasswordInput, resendSignUpCode, confirmSignIn, type ConfirmSignInInput } from 'aws-amplify/auth';
+import {
+  signUp,
+  confirmSignUp,
+  type ConfirmSignUpInput,
+  signIn,
+  type SignInInput,
+  signOut,
+  resetPassword,
+  type ResetPasswordInput,
+  confirmResetPassword,
+  type ConfirmResetPasswordInput,
+  resendSignUpCode,
+  confirmSignIn,
+  type ConfirmSignInInput,
+} from 'aws-amplify/auth';
 
 /* import { integer } from "aws-sdk/clients/cloudfront"; */
 import { getProduct } from '@terrasacha/lib/customQueries';
@@ -74,16 +88,16 @@ export async function signInAuth({ username, password }: SignInInput) {
     throw error;
   }
 }
-export async function confirmSignInAuth({ challengeResponse }: ConfirmSignInInput) {
-
+export async function confirmSignInAuth({
+  challengeResponse,
+}: ConfirmSignInInput) {
   try {
-    const response = await confirmSignIn({ challengeResponse })
-    return response
+    const response = await confirmSignIn({ challengeResponse });
+    return response;
   } catch (error) {
-    throw error
+    throw error;
   }
 }
-
 
 export async function signOutAuth() {
   try {
@@ -126,23 +140,20 @@ const instance = axios.create({
   baseURL: `/api/`,
   withCredentials: true,
 });
-const awsAppSyncApiKey: string = process.env.secrets
-  ? JSON.parse(process.env.secrets).API_KEY_PLATAFORMA
-  : process.env.NEXT_PUBLIC_API_KEY_PLATAFORMA;
 let graphqlEndpoint: string;
-if (process.env.NEXT_PUBLIC_graphqlEndpoint) {
-  graphqlEndpoint = process.env.NEXT_PUBLIC_graphqlEndpoint;
+let awsAppSyncApiKey: string;
+if (process.env['NEXT_PUBLIC_API_KEY_PLATAFORMA']) {
+  awsAppSyncApiKey = process.env['NEXT_PUBLIC_API_KEY_PLATAFORMA'];
 } else {
   throw new Error(`Parameter graphqlEndpoint not found`);
 }
-let s3BucketName: string;
-if (process.env.NEXT_PUBLIC_s3BucketName) {
-  s3BucketName = process.env.NEXT_PUBLIC_s3BucketName;
+if (process.env['NEXT_PUBLIC_graphqlEndpoint']) {
+  graphqlEndpoint = process.env['NEXT_PUBLIC_graphqlEndpoint'];
 } else {
   throw new Error(`Parameter graphqlEndpoint not found`);
 }
 
-export function post(route: string, body = {}) {
+export async function post(route: string, body = {}) {
   return instance
     .post(`${route}`, body)
     .then(({ data }) => {
@@ -940,8 +951,7 @@ export async function verifyOwners(payload: any) {
 
 export async function getPolygonByCadastralNumber(cadastralNumbers: any) {
   // URL de la consulta
-  const url =
-    `${process.env["NEXT_PUBLIC_CADASTRAL_QUERY_URL"]}/14/query`;
+  const url = `${process.env['NEXT_PUBLIC_CADASTRAL_QUERY_URL']}/14/query`;
 
   const whereClause = `CODIGO IN ('${cadastralNumbers.join("','")}')`;
 

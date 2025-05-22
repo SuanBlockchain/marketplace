@@ -11,13 +11,17 @@ import { toast } from 'sonner';
 import Swal from 'sweetalert2';
 import { getIpfsUrlHash } from '@suan/utils/generic/ipfs';
 import { splitLongValues } from '@suan/utils/generic/conversions';
+import ModalTableImages from '../ModalTableImages';
 
 interface ProjectContractsProps {
   mintContract: any;
   spendContract: any;
   utxoToSpend: string;
 }
-
+const initialStateModalImages = {
+  open: false,
+  id: ''
+}
 export default function Projects(props: any) {
   const { walletID, walletAddress, walletData } =
     useContext<any>(WalletContext);
@@ -25,6 +29,7 @@ export default function Projects(props: any) {
   const [projectListFiltered, setProjectListFiltered] = useState<any>(null);
   const [activeTab, setActiveTab] = useState<string>('Distribuidos');
   const [signTransactionModal, setSignTransactionModal] = useState(false);
+  const [modalImages, setModalImages] = useState(initialStateModalImages);
   const [newTransactionBuild, setNewTransactionBuild] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -43,7 +48,11 @@ export default function Projects(props: any) {
   const handleOpenSignTransactionModal = () => {
     setSignTransactionModal(!signTransactionModal);
   };
-
+  const handleModalImages = (id: string, open: boolean) =>{
+    console.log(id, open)
+    setModalImages({id, open})
+    
+  }
   useEffect(() => {
     if (projectList) {
       if (activeTab === 'Distribuidos') {
@@ -768,7 +777,7 @@ export default function Projects(props: any) {
       <div className={`${colors.fuenteAlterna} `}>
         <Card className="h-fit mt-6">
           <Card.Header title="Gestión de Proyectos" />
-          <Card.Body>
+          <Card.Body className='relative'>
             <ul
               className={`bg-custom-dark flex flex-wrap text-sm font-medium text-center text-gray-500 dark:text-gray-400 mb-2 rounded-lg`}
             >
@@ -808,6 +817,7 @@ export default function Projects(props: any) {
                   <ProjectItem
                     project={project}
                     key={project.id}
+                    handleModalImages={handleModalImages}
                     handleDistributeTokens={handleDistributeTokens}
                     handleSendTokensToOwner={handleSendTokensToOwner}
                     checkOwnerWallet={checkOwnerWallet}
@@ -832,6 +842,11 @@ export default function Projects(props: any) {
         handleOpenSignTransactionModal={handleOpenSignTransactionModal}
         newTransactionBuild={newTransactionBuild}
         signType="distributeTokens"
+      />
+      <ModalTableImages 
+        openModal={modalImages.open}
+        projectID={modalImages.id}
+        handleModalImages={handleModalImages}
       />
     </>
   );

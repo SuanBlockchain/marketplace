@@ -345,7 +345,7 @@ const Product: MyPage = (props: any) => {
             {projectData.projectPredialGeoJson && (
               <GoogleMapReact
                 bootstrapURLKeys={{
-                  key: 'AIzaSyCzXTla3o3V7o72HS_mvJfpVaIcglon38U',
+                  key: process.env['NEXT_PUBLIC_GMAPS_API_KEY'] || '',
                 }}
                 defaultCenter={{
                   lat: projectData.projectInfo.location.coords.lat,
@@ -358,7 +358,7 @@ const Product: MyPage = (props: any) => {
                     'polygonsFetchedData'
                   );
 
-                  if (projectData.projectPredialGeoJson.features.length > 0) {
+                  if (projectData?.projectPredialGeoJson?.features?.length > 0) {
                     // Load GeoJSON.
                     map.data.addGeoJson(projectData.projectPredialGeoJson);
                     console.log('entro');

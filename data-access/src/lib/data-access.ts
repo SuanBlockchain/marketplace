@@ -408,14 +408,14 @@ export async function getAllProjects(app: string | undefined) {
             return count + 1;
           }
           // Condicion 6: Postulante ha ingresado
-          if (pf.featureID === 'C_ubicacion') {
+          /* if (pf.featureID === 'C_ubicacion') {
             return count + 1;
-          }
+          } */
           return count;
         },
         0
       );
-      return countFeatures === 5;
+      return countFeatures === 4;
     });
 
     // Condicion 7: Todos los archivos deben estar validados
@@ -1108,6 +1108,24 @@ export async function getImages(imageURL: string) {
     return;
   }
 }
+export async function deleteImage(id: string) {
+  const response = await axios.post(
+    graphqlEndpoint,
+    {
+      query: `mutation deleteImage {
+        deleteImage(input: {id: "${id}"}) {
+          id
+        }
+      }`,
+    },
+    {
+      headers: {
+        'x-api-key': awsAppSyncApiKey,
+      },
+    }
+  );
+  return response;
+}
 export async function getImagesCategories(category: string) {
   try {
     const url = `${process.env['NEXT_PUBLIC_s3EndPoint']}public/category-projects-images/${category}.jpg`;
@@ -1122,6 +1140,142 @@ export async function getImagesCategories(category: string) {
     console.error(error);
     return;
   }
+}
+export async function getProjectImages(projectID: string ) {
+  const query = `
+    query MyQuery {
+      listImages(filter: {productID: {eq: "${projectID}"}}) {
+        items {
+          id
+          title
+          imageURL
+          isActive
+          isOnCarousel
+        }
+      }
+    }
+  `;
+
+  try {
+    const response = await axios.post(
+      graphqlEndpoint,
+      { query: query },
+      {
+        headers: {
+          'x-api-key': awsAppSyncApiKey,
+        },
+      }
+    );
+
+    return response.data.data.listImages.items;
+  } catch (error) {
+    console.error('Error fetching project images:', error);
+    throw new Error('Could not fetch project images');
+  }
+}
+export async function getProjectImagesCarousel(projectID: string) {
+  const query = `
+    query MyQuery {
+      listImages(
+        filter: {
+          productID: { eq: "${projectID}" },
+          isActive: { eq: true },
+          isOnCarousel: { eq: true }
+        }
+      ) {
+        items {
+          id
+          title
+          imageURL
+          isActive
+          isOnCarousel
+        }
+      }
+    }
+  `;
+
+  try {
+    const response = await axios.post(
+      graphqlEndpoint,
+      { query: query },
+      {
+        headers: {
+          'x-api-key': awsAppSyncApiKey,
+        },
+      }
+    );
+
+    return response.data.data.listImages.items;
+  } catch (error) {
+    console.error('Error fetching project images:', error);
+    throw new Error('Could not fetch project images');
+  }
+}
+
+export async function createImageOnDB(productID : string, imageURL : string, name: string) {
+  const mutation = `
+    mutation MyMutation {
+      createImage(input: {
+        productID: "${productID}",
+        format: "",
+        imageURL: "${imageURL}",
+        isActive: false,
+        isOnCarousel: false,
+        title: "${name}"
+      }) {
+        id
+      }
+    }
+  `;
+
+  try {
+    const response = await axios.post(
+      graphqlEndpoint,
+      { query: mutation },
+      {
+        headers: {
+          'x-api-key': awsAppSyncApiKey,
+        },
+      }
+    );
+
+    return response.data.data.createImage.id;
+  } catch (error) {
+    console.error('Error creating image:', error);
+    throw new Error('Could not create image');
+  }
+}
+export async function updateImageOnDB({
+  id,
+  isActive,
+  isOnCarousel
+}: any) {
+  const response = await axios.post(
+    graphqlEndpoint,
+    {
+      query: `
+        mutation UpdateImage($input: UpdateImageInput!) {
+          updateImage(input: $input) {
+            id
+          }
+        }
+      `,
+      variables: {
+        input: {
+          id,
+          isActive,
+          isOnCarousel
+        },
+      },
+    },
+    {
+      headers: {
+        'x-api-key': awsAppSyncApiKey,
+      },
+    }
+  );
+
+  return response;
 }
 export async function getUser(userId: string) {
   const response = await axios.post(
@@ -1141,6 +1295,28 @@ export async function getUser(userId: string) {
   );
 
   return response.data.data.getUser;
+}
+
+export async function getUserByName(userName: string) {
+  const response = await axios.post(
+    graphqlEndpoint,
+    {
+      query: `query MyQuery {
+        listUsers(filter: { name: { eq: "${userName}" } }) {
+          items {
+            email
+          }
+        }
+      }`,
+    },
+    {
+      headers: {
+        'x-api-key': awsAppSyncApiKey,
+      },
+    }
+  );
+
+  return response.data.data.listUsers.items[0]; // Devuelve el primer usuario encontrado
 }
 
 export async function isValidUser(userId: string) {

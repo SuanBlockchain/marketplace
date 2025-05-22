@@ -254,6 +254,7 @@ export default function Transactions(props: TransactionsProps) {
   const handleRefresh = async () => {
     setIsLoading(true);
     await fetchWalletData();
+    await getTransactionsData(paginationMetadata.currentPage, true);
     setIsLoading(false);
   };
   const marketplaceName = process.env.NEXT_PUBLIC_MARKETPLACE_NAME || 'Marketplace';

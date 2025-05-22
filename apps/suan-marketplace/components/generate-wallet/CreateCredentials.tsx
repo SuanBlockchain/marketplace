@@ -126,85 +126,87 @@ const CreateCredentials = (props: any) => {
           {errors.walletname}
         </span>
       </label>
-      <div className="relative w-full mt-2">
-        <FaPen className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500" />
-        <input
-          type="text"
-          placeholder="Ejemplo: Mi billetera de Cardano"
-          name="walletname"
-          value={inputValue.walletname}
-          onChange={(e) => handleInputChange(e)}
-          className={`w-full rounded-lg pl-10 bg-slate-200 text-gray-600 text-lg font-semibold border-2 ${
-            errors.walletname.length > 0
-              ? 'border-red-600 focus:ring-red-600 focus:border-red-600'
-              : 'border-gray-300 focus:ring-gray-500 focus:border-gray-500'
-          }`}
-        />
-      </div>
-      <div className="grid grid-cols-2 gap-x-4 mt-6">
-        <div>
-          <label className="font-semibold text-slate-600">
-            Introduzca la nueva contraseña
-          </label>
-          <div className="relative w-full mt-2">
-            <FaPen className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500" />
-            <input
-              type={showInfo.password ? 'text' : 'password'}
-              name="password"
-              value={inputValue.password}
-              placeholder="Introduzca una contraseña"
-              onChange={(e) => handleInputChange(e)}
-              onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
-              className={`w-full rounded-lg pl-10 bg-slate-200 text-gray-600 text-lg font-semibold border-2 ${
-                errors.password.length > 0
-                  ? 'border-red-600 focus:ring-red-600 focus:border-red-600'
-                  : 'border-gray-300 focus:ring-gray-500 focus:border-gray-500'
-              }`}
-            />
-            <button
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500"
-              onClick={() => handleShowInfo('password')}
-            >
-              {showInfo.password ? <BsFillEyeFill /> : <BsFillEyeSlashFill />}
-            </button>
-          </div>
-          <p className="font-light text-red-500 text-sm">{errors.password}</p>
-        </div>
-        <div>
-          <label className="font-semibold text-slate-600">
-            Repita la nueva contraseña
-          </label>
-          <div className="relative w-full mt-2">
-            <FaPen className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500" />
-            <input
-              type={showInfo.passwordConfirm ? 'text' : 'password'}
-              placeholder="Repetir contraseña"
-              value={inputValue.passwordConfirm}
-              name="passwordConfirm"
-              onChange={(e) => handleInputChange(e)}
-              onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
-              className={`w-full rounded-lg pl-10 bg-slate-200 text-gray-600 text-lg font-semibold border-2 ${
-                errors.passwordConfirm.length > 0
-                  ? 'border-red-600 focus:ring-red-600 focus:border-red-600'
-                  : 'border-gray-300 focus:ring-gray-500 focus:border-gray-500'
-              }`}
-            />
-            <button
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500"
-              onClick={() => handleShowInfo('passwordConfirm')}
-            >
-              {showInfo.passwordConfirm ? (
-                <BsFillEyeFill />
-              ) : (
-                <BsFillEyeSlashFill />
-              )}
-            </button>
-          </div>
-          <p className="font-light text-red-500 text-xs">
-            {errors.passwordConfirm}
-          </p>
-        </div>
-      </div>
+      <div className="relative w-full mt-2 bg-gray-300">
+  <FaPen className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500" />
+  <input
+    type="text"
+    placeholder="Ejemplo: Mi billetera de Cardano"
+    name="walletname"
+    value={inputValue.walletname}
+    onChange={(e) => handleInputChange(e)}
+    className={`w-full rounded-lg pl-10 bg-gray-300 text-gray-600 text-lg font-semibold border-2 ${
+      errors.walletname.length > 0
+        ? 'border-red-600 focus:ring-red-600 focus:border-red-600'
+        : 'border-gray-300 focus:ring-gray-500 focus:border-gray-500'
+    }`}
+  />
+</div>
+
+<div className="grid grid-cols-2 gap-x-4 mt-6">
+  <div>
+    <label className="font-semibold text-slate-600">
+      Introduzca la nueva contraseña
+    </label>
+    <div className="relative w-full mt-2 bg-gray-300">
+      <FaPen className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500" />
+      <input
+        type={showInfo.password ? 'text' : 'password'}
+        name="password"
+        value={inputValue.password}
+        placeholder="Introduzca una contraseña"
+        onChange={(e) => handleInputChange(e)}
+        onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
+        className={`w-full rounded-lg pl-10 bg-gray-300 text-gray-600 text-lg font-semibold border-2 ${
+          errors.password.length > 0
+            ? 'border-red-600 focus:ring-red-600 focus:border-red-600'
+            : 'border-gray-300 focus:ring-gray-500 focus:border-gray-500'
+        }`}
+      />
+      <button
+        className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500"
+        onClick={() => handleShowInfo('password')}
+      >
+        {showInfo.password ? <BsFillEyeFill /> : <BsFillEyeSlashFill />}
+      </button>
+    </div>
+    <p className="font-light text-red-500 text-sm">{errors.password}</p>
+  </div>
+
+  <div>
+    <label className="font-semibold text-slate-600">
+      Repita la nueva contraseña
+    </label>
+    <div className="relative w-full mt-2 bg-gray-300">
+      <FaPen className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500" />
+      <input
+        type={showInfo.passwordConfirm ? 'text' : 'password'}
+        placeholder="Repetir contraseña"
+        value={inputValue.passwordConfirm}
+        name="passwordConfirm"
+        onChange={(e) => handleInputChange(e)}
+        onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
+        className={`w-full rounded-lg pl-10 bg-gray-300 text-gray-600 text-lg font-semibold border-2 ${
+          errors.passwordConfirm.length > 0
+            ? 'border-red-600 focus:ring-red-600 focus:border-red-600'
+            : 'border-gray-300 focus:ring-gray-500 focus:border-gray-500'
+        }`}
+      />
+      <button
+        className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500"
+        onClick={() => handleShowInfo('passwordConfirm')}
+      >
+        {showInfo.passwordConfirm ? (
+          <BsFillEyeFill />
+        ) : (
+          <BsFillEyeSlashFill />
+        )}
+      </button>
+    </div>
+    <p className="font-light text-red-500 text-xs">{errors.passwordConfirm}</p>
+  </div>
+</div>
+
+
       <div className="flex w-full justify-end mt-6 ">
         <Button
           className="px-8"
@@ -216,6 +218,7 @@ const CreateCredentials = (props: any) => {
         <button
           className="relative flex h-10 items-center justify-center p-2 font-medium focus:z-10 focus:outline-none text-white bg-cyan-700 border border-transparent enabled:hover:bg-cyan-800  dark:bg-cyan-600 dark:enabled:hover:bg-cyan-700  rounded-lg focus:ring-2 px-8 ml-4"
           onClick={() => handleContinue()}
+          style={{backgroundColor:"black"}}
         >
           {loading ? (
             <TailSpin

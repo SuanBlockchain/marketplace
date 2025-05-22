@@ -155,12 +155,12 @@ const EnableMFA = (props: any) => {
   };
 
   return (
-    <div className="bg-white rounded-2xl w-[45rem] max-w-[45rem] 2xl:w-[45%] py-10 px-10 sm:px-10 h-auto flex flex-col justify-center">
+    <div className="bg-white rounded-2xl w-full max-w-[90%] sm:max-w-[45rem] 2xl:w-[45%] py-10 px-4 sm:px-10 h-auto flex flex-col justify-center" >
       <div>
-        <div className="flex p-6 justify-center">
+      <div className="flex p-4 sm:p-6 justify-center">
           <div className="w-full flex justify-center">
             {/* Aquí agregamos el logo */}
-            <img src="/v2/logo.svg" alt="Logo" className="h-24 w-auto" />
+            <img src="\images\home-page\logoterrasacha.svg" alt="Logo" className="h-10 w-auto" />
           </div>
         </div>
         <h1 className={`${colors.fuente}  text-3xl  pb-3 text-center`}>
@@ -170,8 +170,8 @@ const EnableMFA = (props: any) => {
           Lee el QR con tu dispositivo móvil.
         </p>
       </div>
-      <div className="flex p-6">
-        <div className="w-[70%] flex justify-center">
+      <div className="flex flex-col sm:flex-row p-4 sm:p-6 items-center sm:items-start">
+      <div className="w-full sm:w-[70%] flex justify-center">
           {setupMFA ? (
             <Canvas
               text={`${setupMFA}` || 'loading'}
@@ -229,36 +229,48 @@ const EnableMFA = (props: any) => {
             )}
           </button>
           <button
-            disabled={!codeChecked}
-            className={`relative w-full mt-6 flex items-center h-10 justify-center ${
-              colors.fuente
-            }  focus:z-10 focus:outline-none text-white ${
-              codeChecked ? colors.bgColor : colors.bgColorAlternativo
-            } disabled:cursor-not-allowed border border-transparent enabled:${
-              colors.hoverBgColor
-            }  dark:bg-cyan-600 dark:enabled:hover:bg-cyan-700  rounded-lg focus:ring-2 px-8 py-2`}
-            onClick={() => handleUpdateMFAPreference()}
-          >
-            {saveLoading ? (
-              <TailSpin
-                width="20"
-                color="#fff"
-                wrapperClass="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-              />
-            ) : (
-              'Continuar'
-            )}
-          </button>
-          <button
-            className={`relative w-full mt-6 flex items-center h-10 justify-center ${colors.fuente} focus:z-10 focus:outline-none border border-custom-marca-boton text-custom-marca-boton ${colors.bgColorAlternativo} ${colors.hoverBgColor} dark:bg-cyan-600 dark:enabled:hover:bg-cyan-700  rounded-lg focus:ring-2 px-8 py-2`}
-            onClick={() => {
-              signOut().then(() => router.reload());
-            }}
-          >
-            Cerrar sesión
-          </button>
+  disabled={!codeChecked}
+  className={`relative w-full mt-6 flex items-center h-10 justify-center text-white border border-transparent rounded-lg focus:z-10 focus:outline-none focus:ring-2 px-8 py-2 disabled:bg-gray-500 disabled:cursor-not-allowed ${
+    codeChecked ? `${colors.bgColor} ${colors.hoverBgColor} ${colors.fuente}` : 'bg-black hover:bg-gray-800'
+  }`}
+  onClick={() => handleUpdateMFAPreference()}
+>
+  {saveLoading ? (
+    <TailSpin
+      width="20"
+      color="#fff"
+      wrapperClass="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+    />
+  ) : (
+    'Continuar'
+  )}
+</button>
+
+
+<button
+ className={`relative w-full mt-6 flex items-center h-10 justify-center ${colors.fuente} focus:z-10 focus:outline-none text-white ${colors.bgColor} border border-transparent ${colors.hoverBgColor} rounded-lg focus:ring-2 px-8 py-2`}
+  onClick={() => {
+    signOut().then(() => router.reload());
+  }}
+>
+  Cerrar sesión
+</button>
+
         </div>
       </div>
+      <div className="text-center mt-6">
+      <p className="text-sm sm:text-base text-gray-600">
+        ¿No sabes cómo escanear el QR?  
+        <a 
+          href="https://terrasacha.gitbook.io/terrasacha/guia-de-usuario-marketplace/publish-your-docs" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-blue-600 hover:text-blue-800 font-semibold underline ml-1"
+        >
+          Mira esta guía.
+        </a>
+      </p>
+    </div>
     </div>
   );
 };

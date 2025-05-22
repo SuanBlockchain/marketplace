@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { TailSpin } from 'react-loader-spinner';
 import { BsFillEyeFill, BsFillEyeSlashFill } from 'react-icons/bs';
-import { AiOutlineInfoCircle } from 'react-icons/ai';
+import { AiOutlineClose, AiOutlineInfoCircle } from 'react-icons/ai';
 export interface ConfirmPasswordProps {
   logo: string;
   widthLogo: number;
@@ -128,10 +128,10 @@ const colors = marketplaceColors[marketplaceName] || {
   fuenteVariante: 'font-normal',
 };
   return (
-    <div className="bg-white rounded-2xl w-[35rem] max-w-[35rem] 2xl:w-[38%] py-10 px-12 sm:px-20 h-auto flex flex-col justify-center">
+    <div className="relative bg-white rounded-2xl w-[35rem] max-w-[35rem] 2xl:w-[38%] py-10 px-12 sm:px-20 h-auto flex flex-col justify-center">
       <div className="w-full flex justify-center mb-8">
         <Image
-          src="/v2/logoterrasacha.svg"
+          src={logo}
           width={widthLogo}
           height={heightLogo}
           alt={`${appName} Logo`}
@@ -139,6 +139,12 @@ const colors = marketplaceColors[marketplaceName] || {
       </div>
       {actualStep === 1 && (
         <>
+         <button
+      className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+      onClick={() => router.push('/auth/login')}
+    >
+      <AiOutlineClose size={24} />
+    </button>
           <h2 className="font-jostBold text-3xl font-normal pb-2">
             Recuperar contraseña
           </h2>

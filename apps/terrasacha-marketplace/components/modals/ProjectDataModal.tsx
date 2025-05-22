@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import GoogleMapReact from 'google-map-react';
 import { Modal, Tabs, Badge, Label, TextInput } from 'flowbite-react';
 import ProjectInfoCard from '../projectData/ProjectInfoCard';
@@ -15,18 +15,37 @@ import CashFlowResume from '../projectData/CashFlowResume';
 import BlockchainCard from '../projectData/BlockchainCards';
 import OwnersDataVerification from '../projectData/OwnersDataVerification';
 import Link from 'next/link';
-
+import { ImageSlider } from '@marketplaces/ui-lib/src/lib/common/ImageSlider'
+import { getProjectImagesCarousel } from '@marketplaces/data-access';
 export default function ProjectDataModal({
   setOpenModal,
   projectData,
   project,
 }: any) {
-  console.log(projectData.projectInfo,'projectData.projectInfo ')
   const [activeTab, setActiveTab] = useState(0);
-  const tabs = ['Detalles', /* 'Galeria', */ 'Archivos', 'Blockchain', 'Finanzas'];
+  const [projectImages, setProjectImages] = useState([]);
+
+  useEffect(() =>{
+    getProjectImagesCarousel(project.id)
+    .then(data =>{
+      const processedData = data.map((item : any) =>{
+        let url = item.imageURL.split('/')
+        url.splice(2,0, 'public')
+        url = url.join('/')
+        let publicUrl = `${process.env.NEXT_PUBLIC_s3EndPoint}${url}`
+        return {
+          alt: item.title,
+          url: publicUrl
+        }
+      })
+      return processedData
+    })
+    .then(data => setProjectImages(data))
+  }, [])
+  const tabs = ['Detalles', 'Galeria', 'Archivos', 'Blockchain', 'Finanzas'];
   const tabComponents = [
     TabDetalles,
-    /* TabGaleria, */
+    TabGaleria,
     TabArchivos,
     TabBlockchain,
     TabFinanzas,
@@ -61,7 +80,7 @@ export default function ProjectDataModal({
     >
       <div className="relative p-4 w-full h-5/6 max-w-6xl max-h-full bg-white overflow-y-scroll rounded-xl no-scrollbar">
         <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-          <h3 className="text-xl font-jostBold text-gray-900 dark:text-white">
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
             Información del proyecto
           </h3>
           <button
@@ -89,29 +108,29 @@ export default function ProjectDataModal({
         </div>
         <div className="p-4 md:p-5 space-y-4">
           <div className="sm:mx-8 sm:px-8 mx-2 px-2">
-            <p className="modal-name text-2xl text-[#2e9651] font-jostBold">
-              {projectData.projectInfo.title} {' '}
+            <p className="modal-name text-2xl text-[#2E7D96]">
+              {projectData.projectInfo.title}{' '}
             </p>
-            <p className="modal-date text-[#484848] font-jostBold">
+            <p className="modal-date text-[#484848]">
               Fecha de creación:{' '}
               <span>{projectData.projectInfo.createdAt}</span>
             </p>
-            <p className="modal-description text-[#484848] mt-2 font-jostRegular">
+            <p className="modal-description text-[#484848] mt-2">
               {projectData.projectInfo.description}{' '}
             </p>
             {projectData.projectVerifierNames?.length > 0 && (
               <section className="mb-8">
-                <p className="modal-validadores mt-4 text-[#484848] font-jostBold">
+                <p className="modal-validadores mt-4 text-[#484848]">
                   Validadores:
                 </p>
-                <div className="flex gap-x-2 mt-2 flex-col sm:flex-row font-jostBold">
+                <div className="flex gap-x-2 mt-2 flex-col sm:flex-row">
                   {projectData.projectVerifierNames?.map(
                     (pvn: any, index: number) => {
                       return (
                         <Badge
                           key={index}
                           color="success"
-                          className="modal-validador text-[#2E7D96] bg-[#D6F8F4] py-1 px-4 font-jostBold"
+                          className="modal-validador text-[#2E7D96] bg-[#D6F8F4] py-1 px-4"
                         >
                           {/* Validador {index + 1}: {pvn} */}
                           {pvn}
@@ -123,8 +142,8 @@ export default function ProjectDataModal({
               </section>
             )}
 
-            <div className="border-t border-1 w-11/12 font-jostRegular"></div>
-            <div className="detail-tabs font-jostRegular">
+            <div className="border-t border-1 w-11/12 "></div>
+            <div className="detail-tabs">
               <div className="detail-div border-[#ABABAB] flex justify-center">
                 <div className="tabs mt-2 pt-2 flex sm:flex-row flex-col w-full">
                   {tabs.map((tab, index) => (
@@ -176,7 +195,7 @@ export default function ProjectDataModal({
           <div className="mapa sm:mx-4 sm:p-6">
             <GoogleMapReact
               bootstrapURLKeys={{
-                key: 'AIzaSyCzXTla3o3V7o72HS_mvJfpVaIcglon38U',
+                key: process.env['NEXT_PUBLIC_GMAPS_API_KEY'] || '',
               }}
               defaultCenter={{
                 lat: projectData.projectInfo.location.coords.lat,
@@ -300,10 +319,13 @@ export default function ProjectDataModal({
   }
 
   function TabGaleria() {
-    return (
+    if(projectImages.length === 0) return(
       <div className="flex justify-center border p-5">
         No se ha subido información
       </div>
+    ) 
+    return (
+        <ImageSlider images={projectImages}/>
     );
   }
 

@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { CopyToClipboard } from '../../ui-lib';
 import { Pie } from 'react-chartjs-2';
 import { Tooltip } from 'react-tooltip';
-
+import ModalTableImages from '../ModalTableImages';
+import { BsThreeDotsVertical } from "react-icons/bs";
 interface ChartDataItem {
   name: string;
   value: number;
@@ -18,6 +19,7 @@ interface ProjectItemProps {
   handleDistributeTokens: (project: any, tokenName: string) => void;
   handleSendTokensToOwner: (project: any) => void;
   checkOwnerWallet: (project: any) => boolean | string;
+  handleModalImages: (id: string, open: boolean) => void; 
 }
 
 export default function ProjectItem(props: ProjectItemProps) {
@@ -26,6 +28,7 @@ export default function ProjectItem(props: ProjectItemProps) {
     handleDistributeTokens,
     handleSendTokensToOwner,
     checkOwnerWallet,
+    handleModalImages
   } = props;
   const [newChartData, setChartData] = useState<ChartDataItem[]>([]);
   const [globalTokenAmount, setGlobalTokenAmount] = useState<number>(0);
@@ -33,6 +36,7 @@ export default function ProjectItem(props: ProjectItemProps) {
   const [spendSwap, setSpendSwap] = useState<any>(null);
   const [tokenData, setTokenData] = useState<any>(null);
   const [tokenName, setTokenName] = useState<string>('');
+  
 
   useEffect(() => {
     if (project) {
@@ -50,7 +54,6 @@ export default function ProjectItem(props: ProjectItemProps) {
       setTokenData(project.tokens.items[0]);
     }
   }, [project]);
-
   const getTokenAmountDistribution = (productFeatures: any) => {
     const tokenAmountDistribution = JSON.parse(
       productFeatures.items.filter((item: any) => {
@@ -171,7 +174,7 @@ export default function ProjectItem(props: ProjectItemProps) {
   return (
     <>
       <div
-        className="col-span-2 xl:col-span-1 w-full rounded-lg bg-custom-dark p-3"
+        className="relative col-span-2 xl:col-span-1 w-full rounded-lg bg-custom-dark p-3"
         key={project.id}
       >
         <div className="flex flex-col justify-center xl:flex-row xl:justify-none p-3 gap-3 items-center">
@@ -188,7 +191,7 @@ export default function ProjectItem(props: ProjectItemProps) {
               </p>
             </div>
           </div>
-          <div className="flex-none">
+          <div className="flex items-center">
             {project.tokenGenesis && !project.tokenClaimedByOwner && (
               <>
                 <button
@@ -238,6 +241,12 @@ export default function ProjectItem(props: ProjectItemProps) {
                 </Tooltip>
               </>
             )}
+            <button 
+                className="bg-gray-200 hover:bg-gray-300 focus:outline-none font-medium rounded text-sm text-black p-3 ml-2 h-full"
+                onClick={() =>{
+                  handleModalImages(project.id, true)
+                }}
+            ><BsThreeDotsVertical /></button>
           </div>
         </div>
 

@@ -52,6 +52,10 @@ export default function WalletDashboard(props: WalletDashboardProps) {
   };
   return (
     <>
+      <div className="flex items-center gap-3 border-b-4 border-gray-300 pb-3 mb-6 bg-gray-100 p-3 rounded-md shadow-sm">
+      <span className="text-2xl">📊</span>
+      <h2 className="text-2xl font-extrabold text-gray-900">Cuadro de Mando</h2>
+      </div>
       <ClaimTokens />
       <div className="grid grid-cols-1 2xl:grid-cols-5 2xl:space-x-5">
         <div className="flex-col col-span-3 space-y-5">

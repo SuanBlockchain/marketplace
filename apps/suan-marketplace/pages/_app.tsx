@@ -17,9 +17,13 @@ import { Amplify } from 'aws-amplify';
 
 import config from '../../../src/aws-exports';
 
-Amplify.configure(config);
-
+const customConfig = {
+  ...config,
+  aws_cognito_identity_pool_id: process.env.NEXT_PUBLIC_AWS_COGNITO_IDENTITY_POOL_ID,
+};
+Amplify.configure(customConfig);
 function MyApp({ Component, pageProps }: MyAppProps) {
+  console.log(customConfig, 'Amplify.configure(config)')
   const Layout = Layouts[Component.Layout] ?? ((page) => page);
   const router = useRouter();
 

@@ -5,6 +5,7 @@ import { WalletContext, mapBuildTransactionInfo } from '@marketplaces/utils-2';
 import { useRouter } from 'next/router';
 import { toast } from 'sonner';
 import { eventTransactionCrypto } from '../../common/event';
+import { EyeIcon, EyeOffIcon } from '../../ui-lib';
 interface SignTransactionProps {
   handleOpenSignTransactionModal: (signStatus?: boolean) => void;
   pendingTx: any;
@@ -18,7 +19,7 @@ export default function SignTransaction(props: SignTransactionProps) {
   const [password, setPassword] = useState<any>('');
   const [passwordError, setPasswordError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
+  const [showPassword, setShowPassword] = useState(false);
   const isRouteChanging = useRef(false);
 
   const router = useRouter();
@@ -287,6 +288,10 @@ export default function SignTransaction(props: SignTransactionProps) {
     return signSubmitResponse;
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   const handleSign = async () => {
     setIsLoading(true);
 
@@ -479,7 +484,7 @@ export default function SignTransaction(props: SignTransactionProps) {
             <LockIcon className={`${colors.fuente} w-5 h-5 `}  />
           </div>
           <input
-            type="password"
+            type={showPassword ? "text" : "password"} 
             aria-invalid="false"
             className={`${colors.fuenteAlterna} bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 ${
               passwordError &&
@@ -491,10 +496,24 @@ export default function SignTransaction(props: SignTransactionProps) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-        </div>
-        {passwordError && (
-          <p className={` ${colors.fuente} text-red-500 text-xs mt-1`}>Contraseña incorrecta</p>
-        )}
+          <div 
+      className="absolute inset-y-0 end-0 top-0 flex items-center pe-3 cursor-pointer"
+      onClick={togglePasswordVisibility}
+    >
+      {showPassword ? (
+        <EyeOffIcon className="w-5 h-5 text-gray-600 hover:text-gray-800" />
+      ) : (
+        <EyeIcon className="w-5 h-5 text-gray-600 hover:text-gray-800" />
+      )}
+    </div>
+  </div>
+
+  {/* Mensaje de error */}
+  {passwordError && (
+    <p className={`${colors.fuente} text-red-500 text-xs mt-1`}>
+      Contraseña incorrecta
+    </p>
+  )}
       </div>
       <hr />
       <div className={`${colors.fuente} flex flex-col md:flex-row justify-between space-y-2 md:space-y-0`}>

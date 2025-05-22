@@ -8,9 +8,26 @@ import {
   confirmSignIn,
   verifyTOTPSetup,
   ConfirmSignInInput,
+  getCurrentUser
 } from 'aws-amplify/auth';
 import { toast } from 'sonner';
+import { fetchUserAttributes } from 'aws-amplify/auth';
 import { AiOutlineInfoCircle } from 'react-icons/ai'; // Icono de información
+import { getUser, getUserByName } from '@marketplaces/data-access';
+interface SignInResponse {
+  nextStep?: {
+    signInStep?: string;
+    challengeParam?: {
+      userAttributes?: {
+        email?: string;
+      };
+    };
+    codeDeliveryDetails?: {
+      destination?: string;
+    };
+  };
+  isSignedIn?: boolean;
+}
 const VerifyCodeMFA = (props: any) => {
   const [code, setCode] = useState<string>('');
   const [loading, setLoading] = useState(false);
@@ -155,60 +172,102 @@ const LoginForm = (props: LoginFormProps) => {
       [name]: !showInfo[name],
     });
   };
+
+
   const submitForm = async () => {
     setLoading(true);
+    setErrors(initialStateErrors); // Resetea errores previos
+  
     try {
-      const data = await signInAuth(loginForm);
-
-      switch (data.nextStep.signInStep) {
-        case 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED':
+      const data: SignInResponse = await signInAuth(loginForm);
+      console.log("🔹 Respuesta de Cognito:", data);
+  
+      switch (data.nextStep?.signInStep) {
+        case "CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED":
           return router.push(
             `/auth/new-password-required?username=${loginForm.username}`
           );
-
-        case 'CONFIRM_SIGN_IN_WITH_TOTP_CODE':
+  
+        case "CONFIRM_SIGN_IN_WITH_TOTP_CODE":
           setShowMFA(true);
-          break;
-
+          return;
+  
         default:
           if (data.isSignedIn) {
             const isFromGenerateWallet =
-              router.query.fromGenerateWallet === 'true';
-            if (isFromGenerateWallet) {
-              return router.push('/generate-wallet');
-            }
-            return router.push('/');
+              router.query.fromGenerateWallet === "true";
+            return router.push(isFromGenerateWallet ? "/generate-wallet" : "/");
           }
       }
+  
+      // --- 🔹 Obtener email del usuario si no está confirmado ---
+      let email = "";
+      let userName = loginForm.username;
+  
+      console.log("🔍 Buscando email en AppSync para usuario:", userName);
+      try {
+        const userData = await getUserByName(userName);
+        if (userData?.email) {
+          email = userData.email;
+          console.log("📩 Email obtenido desde AppSync:", email);
+        }
+      } catch (error) {
+        console.error("❌ Error obteniendo email desde AppSync:", error);
+      }
+  
+      // Si no hay email, usar el username si es un correo válido
+      if (!email && userName.includes("@")) {
+        email = userName;
+        console.log("📩 Usando el username como email:", email);
+      }
+  
+      console.log("✅ Email final recuperado:", email || "No disponible");
+  
+      // 🔄 Redirigir con el email obtenido
+      return router.push(`/auth/confirm-code?email=${encodeURIComponent(email)}`);
+  
     } catch (error: any) {
-      console.log(error.name);
-      let errorMessage = 'error.name';
-
+      console.error("❌ Error de autenticación:", error);
+  
+      let errorMessage = "Error desconocido, cierre su sesión antes de intentar nuevamente";
+      let emailFromError = error?.challengeParam?.userAttributes?.email || "";
+  
       switch (error.name) {
-        case 'UserNotFoundException':
-          errorMessage = 'El usuario no existe';
+        case "UserNotFoundException":
+          errorMessage = "El usuario no existe";
           break;
-        case 'NotAuthorizedException':
-          errorMessage = 'Contraseña inválida';
+        case "NotAuthorizedException":
+          errorMessage = "Contraseña inválida";
           break;
-        case 'EmptySignInUsername':
-          errorMessage = 'Debe ingresar datos';
+        case "EmptySignInUsername":
+          errorMessage = "Debe ingresar datos";
           break;
-        case 'NetworkError':
-          errorMessage = 'Problema de red, intenta nuevamente'; // Posible mensaje para errores de red
+        case "NetworkError":
+          errorMessage = "Problema de red, intenta nuevamente";
           break;
         default:
-          errorMessage = 'Error desconocido, no olvide cerrar su usuario, antes de continuar con un nuevo ingreso';
+          errorMessage = "Error inesperado, por favor intente más tarde.";
       }
-
-      setErrors((preForm: any) => ({
-        ...preForm,
-        loginError: errorMessage, //sale cuenando internet falla
+  
+      setErrors((prevErrors: { loginError: string }) => ({
+        ...prevErrors,
+        loginError: errorMessage,
       }));
+  
+      toast.error(errorMessage);
+  
+      // Si obtenemos el email del error, redirigir a confirmación
+      if (emailFromError) {
+        return router.push(`/auth/confirm-code?email=${encodeURIComponent(emailFromError)}`);
+      }
     } finally {
       setLoading(false);
     }
   };
+  
+  
+  
+
   const marketplaceName =
   process.env.NEXT_PUBLIC_MARKETPLACE_NAME || 'Marketplace';
 const marketplaceColors: Record<
@@ -369,9 +428,9 @@ const colors = marketplaceColors[marketplaceName] || {
         <div className="font-jostRegular flex items-center justify-center mt-4 text-xs">
           Powered by
           <Image
-            src="/images/home-page/suan_logo.png"
-            height={10}
-            width={12}
+            src={logo}
+            height={80}
+            width={92}
             className="ml-2"
             alt={`${appName} logo`}
           />

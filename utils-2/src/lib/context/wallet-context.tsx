@@ -4,7 +4,6 @@ import { getActualPeriod, getAssetsLockedValue } from '../utils-2';
 import { BsWindowSidebar } from 'react-icons/bs';
 import { MinLovelaceResponse } from '../generic/getAssetsLockedValue';
 
-
 const WalletContext = createContext({});
 
 export function WalletContextProvider({
@@ -23,8 +22,10 @@ export function WalletContextProvider({
   const [isLoading, setIsLoading] = useState<any>(false);
   const [prevBalance, setPrevBalance] = useState(null);
   const [balanceChanged, setBalanceChanged] = useState(0);
-  const [walletLockedBalance, setWalletLockedBalance] = useState<MinLovelaceResponse>(null);
-  const [walletAvailableBalance, setWalletAvailableBalance] = useState<any>(null);
+  const [walletLockedBalance, setWalletLockedBalance] =
+    useState<MinLovelaceResponse>(null);
+  const [walletAvailableBalance, setWalletAvailableBalance] =
+    useState<any>(null);
   const [walletTotalBalance, setWalletTotalBalance] = useState<any>(null);
 
   const handleWalletData = async ({
@@ -125,28 +126,34 @@ export function WalletContextProvider({
         }
       );
       let responseData = await response.json();
-      if(responseData.error){
+      if (responseData.error) {
         responseData = {
           address: wallet_address,
           stake_address: '',
           script_address: false,
           balance: '0',
-          assets: []
-        }
+          assets: [],
+        };
       }
       if (prevBalance === null) {
         setPrevBalance(responseData.balance);
       }
-      console.log(responseData, 'responseData')
+      console.log(responseData, 'responseData');
 
-      const blockedLovelace = await getAssetsLockedValue(wallet_address, responseData.assets)
-      
+      const blockedLovelace = await getAssetsLockedValue(
+        wallet_address,
+        responseData.assets
+      );
+
       setWalletData(responseData);
 
-      if(blockedLovelace && responseData.balance) {
+      if (blockedLovelace && responseData.balance) {
         setWalletTotalBalance(responseData.balance);
-        setWalletAvailableBalance(responseData.balance - blockedLovelace);
-        setWalletLockedBalance(blockedLovelace);
+        const availableBalance = responseData.balance - blockedLovelace;
+        setWalletAvailableBalance(availableBalance >= 0 ? availableBalance : 0);
+        setWalletLockedBalance(
+          responseData.assets.length > 0 ? blockedLovelace : 0
+        );
       }
 
       setIsLoading(false);
@@ -161,10 +168,10 @@ export function WalletContextProvider({
 
   useEffect(() => {
     let intervalTime = 30000;
-    let intervalId : any;
-    if(!window.sessionStorage.getItem('checkBalance')){
-      const timestamp = Date.now()
-      window.sessionStorage.setItem('checkBalance', JSON.stringify(timestamp))
+    let intervalId: any;
+    if (!window.sessionStorage.getItem('checkBalance')) {
+      const timestamp = Date.now();
+      window.sessionStorage.setItem('checkBalance', JSON.stringify(timestamp));
     }
     const startPolling = () => {
       intervalId = setInterval(async () => {
@@ -172,7 +179,10 @@ export function WalletContextProvider({
         //@ts-ignore
         const timeToVerify = parseInt(window.sessionStorage.getItem('checkBalance')) + intervalTime;
         if (timestamp > timeToVerify) {
-          window.sessionStorage.setItem('checkBalance', JSON.stringify(timestamp));
+          window.sessionStorage.setItem(
+            'checkBalance',
+            JSON.stringify(timestamp)
+          );
           const walletData = await fetchWalletData();
 
           if (walletData) {

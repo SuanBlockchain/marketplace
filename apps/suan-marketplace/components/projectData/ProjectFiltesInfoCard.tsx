@@ -16,6 +16,9 @@ export default function ProjectFilesInfoCard({ projectFiles }: any) {
             </Table.Head>
             <Table.Body className="divide-y">
               {projectFiles.map((file: any) => {
+                let urlFileDecoded = decodeURIComponent(file.fileURLS3).split('/')
+                urlFileDecoded.splice(5,0,"public")
+                let urlFile = urlFileDecoded.join("/")
                 return (
                   <Table.Row key={file.id}>
                     <Table.Cell>{file.docTitle}</Table.Cell>
@@ -23,7 +26,7 @@ export default function ProjectFilesInfoCard({ projectFiles }: any) {
                       {convertAWSDatetimeToDate(file.createdAt)}
                     </Table.Cell>
                     <Table.Cell className="flex justify-center">
-                      <Link href={file.fileURLS3} target="_blank">
+                      <Link href={urlFile} target="_blank">
                         <Button className="m-1" size="sm">
                           Descargar
                         </Button>

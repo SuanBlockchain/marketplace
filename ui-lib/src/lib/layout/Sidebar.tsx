@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { BookIcon } from '../icons/BookIcon';
 import { ChartIcon } from '../icons/ChartIcon';
+import { MailIcon } from '../icons/MailIcon';
 import { ChevronDownIcon } from '../icons/ChevronDownIcon';
 import { MarketIcon } from '../icons/MarketIcon';
 import { ScaleIcon } from '../icons/ScaleIcon';
@@ -343,14 +344,6 @@ export default function Sidebar(props: SidebarProps) {
                 Nueva transaccion
               </Link>
             </li>
-            <li>
-              <Link
-                href="/wallet/achievements"
-                className={`${colors.fuenteAlterna}  flex items-center w-full p-2 pl-11 group text-black rounded-lg hover:bg-custom-dark hover:text-white transition duration-150 ease-linear`}
-              >
-                Logros
-              </Link>
-            </li>
           </ul>
         </li>
         <li>
@@ -374,13 +367,23 @@ export default function Sidebar(props: SidebarProps) {
             <span className={`${colors.fuenteAlterna}  flex-1 ml-3 whitespace-nowrap`}>Mercado P2P</span>
           </Link>
         </li>
+        <li>
+          <Link
+            onClick={onClose}
+            href="/pqr"
+            className="flex items-center p-2 text-black rounded-lg hover:bg-custom-dark hover:text-white transition duration-150 ease-linear"
+          >
+            <MailIcon />
+            <span className={`${colors.fuenteAlterna} flex-1 ml-3 whitespace-nowrap`}>PQR</span>
+          </Link>
+        </li>
       </ul>
     </div>
     <div>
       <ul className="space-y-4">
         <li>
           <Link
-            href="https://suan-1.gitbook.io/documentacion-suan-sandbox/"
+            href="https://terrasacha.gitbook.io/terrasacha"
             target="_blank"
             className="flex items-center p-2 text-black rounded-lg hover:bg-custom-dark hover:text-white transition duration-150 ease-linear"
           >
@@ -393,9 +396,9 @@ export default function Sidebar(props: SidebarProps) {
             <div className={`${colors.fuenteAlterna} flex items-center mt-2 mb-4`}>
               Powered by
               <Image
-                src="/images/home-page/suan_logo.png"
-                height={10}
-                width={12}
+                src="/v2/logoterrasacha.svg"
+                height={80}
+                width={92}
                 className="ml-1"
                 alt="SUAN Logo"
               />

@@ -131,7 +131,7 @@ const SignUpForm = (props: SignUpFormProps) => {
     <div className="bg-white rounded-2xl w-[35rem] max-w-[35rem] 2xl:w-[38%] py-10 px-12 sm:px-20 h-auto flex flex-col justify-center">
       <div className="w-full flex justify-center mb-8">
         <Image
-          src="/v2/logoterrasacha.svg"
+          src={logo}
           width={widthLogo}
           height={heightLogo}
           alt={`${appName} logo`}
@@ -252,20 +252,17 @@ const SignUpForm = (props: SignUpFormProps) => {
             )}
           </button>
         </div>
-        <div className="max-w-md mb-2">
-          <div className="mb-2 block">
-            <Label className="font-jostRegular " value="Tipo de usuario:" />
-          </div>
-          <Select
-            name="role"
-            value={signupForm.role}
-            onChange={handleChange}
-            className="font-jostRegular rounded-sm" // Estilo aplicado al select
-          >
-            <option value="investor">Inversionista</option>
-            <option value="constructor">Propietario</option>
-          </Select>
-        </div>
+        <div className="max-w-md mb-4">
+  <div className="mb-2 block">
+    <Label className="font-jostRegular text-sm text-gray-700" value="Tipo de usuario" />
+  </div>
+  <div className="bg-gray-100 text-gray-900 px-4 py-2 rounded-md font-jostRegular text-sm">
+    Inversionista
+  </div>
+  {/* Campo oculto para enviar el valor en el formulario */}
+  <input type="hidden" name="role" value="investor" />
+</div>
+
       </form>
 
       <div className="font-jostRegular  flex items-center mb-4">
@@ -297,30 +294,36 @@ const SignUpForm = (props: SignUpFormProps) => {
         </label>
       </div>
       <button
-        type="button"
-        onClick={() => submitForm()}
-        className={`relative w-full flex items-center justify-center h-10 font-jostBold focus:z-10 focus:outline-none text-white bg-custom-marca-boton border border-transparent enabled:hover:bg-custom-marca-boton-variante  dark:bg-cyan-600 dark:enabled:hover:bg-cyan-700  rounded-lg focus:ring-2 px-8 py-2`}
-        disabled={
-          signupForm.password.length === 0 ||
-          signupForm.username.length === 0 ||
-          signupForm.email.length === 0 ||
-          extraForm.confirmPassword.length === 0 ||
-          !termsAccepted ||
-          !privacyAccepted
-        }
-      >
-        {loading ? (
-          <TailSpin
-            width="20"
-            color="#fff"
-            wrapperClass="font-jostRegular absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-          />
-        ) : (
-          'Regístrarse'
-        )}
-      </button>
+  type="button"
+  onClick={() => submitForm()}
+  className={`relative w-full flex items-center justify-center h-10 font-jostBold focus:z-10 focus:outline-none text-white border border-transparent rounded-lg focus:ring-2 px-8 py-2
+    ${(!termsAccepted || !privacyAccepted)
+      ? 'bg-gray-400 cursor-not-allowed'  // Color gris cuando está deshabilitado
+      : 'bg-custom-marca-boton enabled:hover:bg-custom-marca-boton-variante dark:bg-cyan-600 dark:enabled:hover:bg-cyan-700' // Color normal cuando está habilitado
+    }`
+  }
+  disabled={
+    signupForm.password.length === 0 ||
+    signupForm.username.length === 0 ||
+    signupForm.email.length === 0 ||
+    extraForm.confirmPassword.length === 0 ||
+    !termsAccepted ||
+    !privacyAccepted
+  }
+>
+  {loading ? (
+    <TailSpin
+      width="20"
+      color="#fff"
+      wrapperClass="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+    />
+  ) : (
+    'Regístrarse'
+  )}
+</button>
+
       <p className="font-jostRegular text-sm pt-1 w-full text-center">
-        ¿Ya tienes una cuenta?
+        ¿Ya tienes una  ?
         <Link
           href={
             router.query.fromGenerateWallet === 'true'
@@ -336,9 +339,9 @@ const SignUpForm = (props: SignUpFormProps) => {
         <div className="font-jostRegular flex items-center justify-center mt-4 text-xs">
           Powered by
           <Image
-            src="/images/home-page/suan_logo.png"
-            height={10}
-            width={12}
+            src={logo}
+            height={80}
+            width={92}
             className="ml-2"
             alt={`${appName} logo`}
           />

@@ -9,7 +9,7 @@ interface ButtonProfileNavbarProps {
 }
 const ButtonProfileNavbar = (props: ButtonProfileNavbarProps) => {
   const { openModal, walletInfo, showModal } = props;
-  const walletChar = walletInfo.name.charAt(0).toUpperCase();
+  const walletChar = walletInfo?.name?.charAt(0)?.toUpperCase();
   const [username, setUsername] = useState<any>('')
   useEffect(() =>{
     getCurrentUser().then((data : any) =>{

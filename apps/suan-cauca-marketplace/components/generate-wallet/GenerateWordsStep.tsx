@@ -122,6 +122,13 @@ const GenerateWordsStep = (props: any) => {
             </div>
           </div>
           <div className="flex w-full justify-end mt-3">
+          <Button
+          className="px-8"
+          color="gray"
+          onClick={() => router.push('/')}
+        >
+          Vover
+        </Button>
             <Button
               className="group flex h-min items-center justify-center p-1 text-center font-medium focus:z-10 focus:outline-none text-white bg-cyan-700 border border-transparent enabled:hover:bg-cyan-800  dark:bg-cyan-600 dark:enabled:hover:bg-cyan-700  rounded-lg focus:ring-2 px-8 ml-4"
               disabled={!isChecked}

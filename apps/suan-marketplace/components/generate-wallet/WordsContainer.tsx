@@ -36,82 +36,76 @@ const WordsContainer = (props: any) => {
     }, 100);
   };
   return wordsFormatted === null ? (
-    <div className="w-full  h-24 rounded-xl flex justify-center items-center palabras">
-      <p>
-        <Button
-          className="relative flex items-center justify-center h-10 px-4 py-2 bg-[#0e7490] rounded-md text-sm text-white w-48"
-          onClick={() => generateWords()}
-        >
-          {loading ? (
-            <TailSpin
-              width="20"
-              color="#fff"
-              wrapperClass="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-            />
-          ) : (
-            'Generar palabras'
-          )}{' '}
-        </Button>
-      </p>
+    <div className="w-full h-24 rounded-xl flex justify-center items-center">
+      <Button
+        className="relative flex items-center justify-center h-10 px-4 py-2 bg-black rounded-md text-sm text-white w-48 shadow-md"
+        onClick={() => generateWords()}
+      >
+        {loading ? (
+          <TailSpin
+            width="20"
+            color="#FFFFFF"
+            wrapperClass="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+          />
+        ) : (
+          'Generar palabras'
+        )}
+      </Button>
     </div>
   ) : (
-    <div className="relative w-full palabras-bg h-auto rounded-xl">
+    <div className="relative w-full bg-gray-100 h-auto rounded-xl p-4">
+      {/* Botón para copiar con tooltip y texto adicional */}
       {useCase === 'generate' && (
-        <button
-          onClick={() => copyToClipboard()}
-          className="absolute right-2 top-2 text-[#2e7d96]"
-        >
-          {copied ? <FaCopy /> : <FaRegCopy />}
-        </button>
+        <div className="absolute right-4 top-4 flex items-center gap-2">
+          <span className="text-gray-500 text-sm hidden sm:inline">Copiar palabras</span>
+          <button
+            onClick={() => copyToClipboard()}
+            title="Copiar palabras"
+            className="text-black hover:text-gray-600"
+          >
+            {copied ? <FaCopy /> : <FaRegCopy />}
+          </button>
+        </div>
       )}
-      <div className="grid grid-cols-3 gap-x-5 gap-y-4 px-8 py-8 palabras">
+  
+      {/* Grilla de palabras - Ajuste responsivo */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4 px-4 py-6">
         {useCase === 'generate' &&
-          wordsFormatted.map((word: string, index: number) => {
-            return (
-              <div
-                className="palabra w-full relative text-center text-lg font-semibold"
-                key={index}
-              >
-                <p className="absolute left-2 ">{index + 1}</p>
-                <p>{word}</p>
-              </div>
-            );
-          })}
+          wordsFormatted.map((word: string, index: number) => (
+            <div
+              className="flex items-center gap-2 bg-gray-200 rounded-lg p-2 shadow-sm text-black font-semibold"
+              key={index}
+            >
+              <span className="text-gray-600 text-sm">{index + 1}</span>
+              <span className="text-black">{word}</span>
+            </div>
+          ))}
+  
         {useCase === 'recovery' &&
-          recoveryWords.map((word: string, index: number) => {
-            return (
-              <div
-                className={`w-full relative text-center border-b-2  text-lg font-semibold ${
-                  nextRecoveryWordIndex === index
-                    ? 'border-white'
-                    : 'border-gray-400'
-                }`}
-                key={index}
-              >
-                <p
-                  className={`absolute left-2 text-gray-400 ${
-                    nextRecoveryWordIndex === index
-                      ? 'text-white'
-                      : 'text-gray-400'
-                  }`}
+          recoveryWords.map((word: string, index: number) => (
+            <div
+              className={`relative flex items-center gap-2 border-b-2 text-base md:text-lg font-semibold bg-gray-100 rounded-lg p-2 ${
+                nextRecoveryWordIndex === index ? 'border-blue-500' : 'border-gray-400'
+              }`}
+              key={index}
+            >
+              <span className="text-gray-500">{index + 1}</span>
+              <span className="text-black">{word || 'ㅤ'}</span>
+              {word !== '' && (
+                <button
+                  className="ml-auto text-gray-500 hover:text-gray-700"
+                  onClick={() => removeRecoveryWord(index)}
                 >
-                  {index + 1}
-                </p>
-                {word !== '' && (
-                  <button
-                    className="absolute right-2 top-1 text-gray-400"
-                    onClick={() => removeRecoveryWord(index)}
-                  >
-                    <IoCloseSharp />
-                  </button>
-                )}
-                <p className="text-white">{word || 'ㅤ'}</p>
-              </div>
-            );
-          })}
+                  <IoCloseSharp />
+                </button>
+              )}
+            </div>
+          ))}
       </div>
     </div>
   );
+  
+
 };
 
-export default WordsContainer;
+export default WordsContainer;
