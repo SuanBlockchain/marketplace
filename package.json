@@ -2,7 +2,12 @@
   "name": "@marketplaces/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+ "scripts": {
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start",
+  "lint": "next lint"
+  },
   "private": true,
   "dependencies": {
     "@aws-sdk/client-s3": "^3.682.0",

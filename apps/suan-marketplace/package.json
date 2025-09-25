@@ -2,7 +2,8 @@
   "name": "suan-marketplace",
   "version": "0.0.1",
   "scripts": {
-    "start": "next start"
+    "start": "next start",
+      "build": "next build"
   },
   "dependencies": {
     "@headlessui/react": "1.7.17",

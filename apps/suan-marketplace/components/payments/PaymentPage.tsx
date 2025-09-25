@@ -349,19 +349,8 @@ export default function PaymentPage({}) {
       //   }
       // }
       if (paymentType === 'fiat') {
-        if (!userValidation.isValidatedStep2) {
-          Swal.fire({
-            title: 'Validación pendiente',
-            text: 'Debes completar la verificación Pro de identidad antes de poder realizar una compra.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-          })
-          return false;
-        }
+     return true;
       }
-      return true;
     }
 
     return false;
@@ -426,7 +415,7 @@ export default function PaymentPage({}) {
           finalValue:
             parseFloat(projectInfo.tokenPrice) * parseInt(tokenAmount),
           tokenAmount: tokenAmount,
-          tokenName: projectInfo.token.tokenName,
+          tokenName: projectInfo?.token?.tokenName,
           currency: projectInfo.tokenCurrency,
           productID: projectInfo.projectID,
           userID: userId,
@@ -625,7 +614,7 @@ export default function PaymentPage({}) {
           postDistributionPayload: {
             projectId: projectInfo.projectID,
             projectName: projectInfo.projectName,
-            tokenName: projectInfo.token.tokenName,
+            tokenName: projectInfo?.token?.tokenName,
             tokenAmount: parseInt(tokenAmount),
           },
           retryPayload: build.payload,
@@ -952,7 +941,7 @@ export default function PaymentPage({}) {
                     amount={projectInfo.tokenPrice}
                     currency={projectInfo.tokenCurrency}
                     tokenQuantity={tokenAmount}
-                    tokenName={projectInfo.token.tokenName}
+                    tokenName={projectInfo?.token?.tokenName}
                     invoiceID={invoiceID}
                   ></EpaycoCheckout>
                 )}
@@ -986,7 +975,7 @@ export default function PaymentPage({}) {
                             Tokens por recibir:{' '}
                           </span>
                           <span>
-                            {tokenAmount} ({projectInfo.token.tokenName})
+                            {tokenAmount} ({projectInfo?.token?.tokenName})
                           </span>
                         </div>
                       </div>
@@ -1014,7 +1003,7 @@ export default function PaymentPage({}) {
                       <div>
                         <span className="font-bold">Tokens Recibidos: </span>
                         <span>
-                          {tokenAmount} ({projectInfo.token.tokenName})
+                          {tokenAmount} ({projectInfo?.token?.tokenName})
                         </span>
                       </div>
                     </div>

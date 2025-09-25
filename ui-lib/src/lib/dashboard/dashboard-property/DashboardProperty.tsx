@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { MyPage } from '../../components/common/types';
+import { MyPage } from '../../common/types';
 import { useState, useEffect } from 'react';
 import Card from '@marketplaces/ui-lib/src/lib/common/Card';
 import React, { useRef } from 'react';

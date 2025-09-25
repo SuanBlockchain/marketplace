@@ -1,0 +1,101 @@
+{
+  "auth": {
+    "marketplacesuanf960d3cf": {
+      "customAuth": false,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito",
+      "serviceType": "imported"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_auth_marketplacesuanf960d3cf_allowUnauthenticatedIdentities": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "marketplacesuanf960d3cf"
+        }
+      ]
+    },
+    "AMPLIFY_auth_marketplacesuanf960d3cf_authRoleArn": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "marketplacesuanf960d3cf"
+        }
+      ]
+    },
+    "AMPLIFY_auth_marketplacesuanf960d3cf_authRoleName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "marketplacesuanf960d3cf"
+        }
+      ]
+    },
+    "AMPLIFY_auth_marketplacesuanf960d3cf_identityPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "marketplacesuanf960d3cf"
+        }
+      ]
+    },
+    "AMPLIFY_auth_marketplacesuanf960d3cf_identityPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "marketplacesuanf960d3cf"
+        }
+      ]
+    },
+    "AMPLIFY_auth_marketplacesuanf960d3cf_nativeClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "marketplacesuanf960d3cf"
+        }
+      ]
+    },
+    "AMPLIFY_auth_marketplacesuanf960d3cf_unauthRoleArn": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "marketplacesuanf960d3cf"
+        }
+      ]
+    },
+    "AMPLIFY_auth_marketplacesuanf960d3cf_unauthRoleName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "marketplacesuanf960d3cf"
+        }
+      ]
+    },
+    "AMPLIFY_auth_marketplacesuanf960d3cf_userPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "marketplacesuanf960d3cf"
+        }
+      ]
+    },
+    "AMPLIFY_auth_marketplacesuanf960d3cf_userPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "marketplacesuanf960d3cf"
+        }
+      ]
+    },
+    "AMPLIFY_auth_marketplacesuanf960d3cf_webClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "marketplacesuanf960d3cf"
+        }
+      ]
+    }
+  }
+}
