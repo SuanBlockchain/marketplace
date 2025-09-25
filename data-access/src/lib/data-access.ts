@@ -238,7 +238,6 @@ export async function getCategories() {
 }
 
 export async function getAllProjects(app: string | undefined) {
-  //console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
   try {
     const response = await axios.post(
       graphqlEndpoint,
@@ -366,7 +365,7 @@ export async function getAllProjects(app: string | undefined) {
 
     console.log('allProducts', response.data.data.listProducts.items);
     const marketplaceProducts = response.data.data.listProducts.items.filter(
-      (product: any) => product.marketplace.name === app
+      (product: any) => product.marketplace?.name === app
     );
     console.log('marketplaceProducts', marketplaceProducts);
 

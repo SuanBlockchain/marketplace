@@ -32,6 +32,7 @@ interface MapComponentProps {
 const MapComponent: React.FC<MapComponentProps> = ({ lat, lng, layers }) => {
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const [map, setMap] = useState<mapboxgl.Map | null>(null);
+  const [mapLoaded, setMapLoaded] = useState(false);
 
   useEffect(() => {
     if (mapContainer.current && !map) {
@@ -41,8 +42,14 @@ const MapComponent: React.FC<MapComponentProps> = ({ lat, lng, layers }) => {
         style: 'mapbox://styles/mapbox/satellite-v9',
         center: [lng, lat],
         zoom: 12,
-      }).on('draw.create', function (e: any) {
-        if (e.features.length && e.features[0].geometry.type == 'Point') {
+      });
+
+      newMap.on('load', () => {
+        setMapLoaded(true);
+      });
+
+      newMap.on('draw.create', function (e: any) {
+        if (e.features.length && e.features[0].geometry.type === 'Point') {
           const center = e.features[0].geometry.coordinates;
           //map.setCenter(center);
           newMap.easeTo({ center: center });
@@ -52,17 +59,15 @@ const MapComponent: React.FC<MapComponentProps> = ({ lat, lng, layers }) => {
       setMap(newMap);
     }
 
-    // Limpieza al desmontar el componente
     return () => {
       if (map) {
-        map.remove(); // Eliminar el mapa y liberar recursos
+        map.remove();
       }
     };
   }, [mapContainer, map, lat, lng]);
 
   useEffect(() => {
-    if (map && layers) {
-      console.log('layers', layers);
+    if (map && mapLoaded && layers) {
       layers.forEach((layer: any) => {
         if (layer.type === 'geojson') {
           map.addSource('geojson-layer', {
@@ -84,11 +89,6 @@ const MapComponent: React.FC<MapComponentProps> = ({ lat, lng, layers }) => {
           map.on('click', 'geojson-layer', (e: any) => {
             if (e.features.length) {
               const feature = e.features[0];
-              const coordinates = feature.geometry.coordinates.slice();
-              console.log('feature', feature);
-              const description = feature.properties.name || 'Sin descripción'; // Cambia esto según tus propiedades
-
-              // Crear y mostrar el popup
               new Popup()
                 .setLngLat({ lat: -71.77298426628113, lng: 4.525238611953952 })
                 .setHTML(`<h3>Holaaaaaaaaa</h3>`)
@@ -105,7 +105,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ lat, lng, layers }) => {
         } else if (layer.type === 'tif') {
           map.addSource('tif-layer', {
             type: 'raster',
-            tiles: layer.data, // Asegúrate de que layer.data sea un array de URLs de tiles
+            tiles: layer.data,
             tileSize: 256,
           });
           map.addLayer({
@@ -116,7 +116,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ lat, lng, layers }) => {
         }
       });
     }
-  }, [map, layers]);
+  }, [map, mapLoaded, layers]);
 
   return (
     <div
